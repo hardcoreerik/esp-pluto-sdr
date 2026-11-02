@@ -1,0 +1,83 @@
+{
+  "as_of": "2026-11-02",
+  "charts": [
+    "charts/loc_by_language.png",
+    "charts/complexity_distribution.png",
+    "charts/commits_per_month.png"
+  ],
+  "command": "rsa.py compare tezuka-fw fishball7020-fpga-devkit fishball-datv libiio",
+  "generated_at": "2026-11-02T13:58:11-08:00",
+  "output_dir": "comparisons/2026-11-02_esp-pluto-sdr-firmware",
+  "rsa_version": "0.1.3",
+  "schema": 1,
+  "settings": {
+    "binary_globs": [
+      "*.elf",
+      "*.bin",
+      "*.exe",
+      "*.dll",
+      "*.so",
+      "*.axf",
+      "*.hex"
+    ],
+    "exclude_dirs": [
+      ".git",
+      "build",
+      "managed_components",
+      "node_modules",
+      ".pio",
+      "dist",
+      "out",
+      "target",
+      ".venv",
+      "venv",
+      "__pycache__",
+      ".idea",
+      ".vscode"
+    ],
+    "force": false,
+    "skip_rea": true
+  },
+  "targets": [
+    {
+      "commit": "dba3dd89a036fa47936e1ea357029137df17f7df",
+      "license": "GPL-3.0",
+      "origin": "local:/workspace/scratch/b99a64b46c2a/sources/tezuka_fw",
+      "slug": "tezuka-fw",
+      "summary": "targets/tezuka-fw/metrics/summary.json",
+      "type": "repo"
+    },
+    {
+      "commit": "b374db56cb631d2c6286d7dc78c7438ae3918a3d",
+      "license": "GPL-2.0",
+      "origin": "local:/workspace/scratch/b99a64b46c2a/sources/fishball7020-fpga-devkit",
+      "slug": "fishball7020-fpga-devkit",
+      "summary": "targets/fishball7020-fpga-devkit/metrics/summary.json",
+      "type": "repo"
+    },
+    {
+      "commit": "ab343de161918e4baa691dce0a25fc5549324d9a",
+      "license": "GPL-3.0",
+      "origin": "local:/workspace/scratch/b99a64b46c2a/sources/Fishball_DATV",
+      "slug": "fishball-datv",
+      "summary": "targets/fishball-datv/metrics/summary.json",
+      "type": "repo"
+    },
+    {
+      "commit": "ddac2991667ee897363c8ecd45d1dc3f6c3a7608",
+      "license": "LGPL-2.1",
+      "origin": "local:/workspace/scratch/b99a64b46c2a/sources/libiio",
+      "slug": "libiio",
+      "summary": "targets/libiio/metrics/summary.json",
+      "type": "repo"
+    }
+  ],
+  "tools": {
+    "git": "git version 2.51.1",
+    "lizard": "1.25.0",
+    "python": "3.12.14",
+    "rea": null,
+    "rsa": "0.1.3",
+    "scc": null
+  }
+}

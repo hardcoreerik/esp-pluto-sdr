@@ -1,0 +1,46 @@
+  PASS  cases123.sh: SIGTERM runs the handler once and EXITS
+  PASS  cases123.sh: SIGHUP runs the handler once and EXITS
+  PASS  cases123.sh: SIGINT runs the handler once and EXITS
+  PASS  case5.sh: SIGTERM runs the handler once and EXITS
+  PASS  case5.sh: SIGHUP runs the handler once and EXITS
+  PASS  case5.sh: SIGINT runs the handler once and EXITS
+  PASS  case4b.sh: SIGTERM runs the handler once and EXITS
+  PASS  case4b.sh: SIGHUP runs the handler once and EXITS
+  PASS  case4b.sh: SIGINT runs the handler once and EXITS
+  PASS  dds-tone.sh: SIGTERM runs the handler once and EXITS
+  PASS  dds-tone.sh: SIGHUP runs the handler once and EXITS
+  PASS  dds-tone.sh: SIGINT runs the handler once and EXITS
+  PASS  case4a.sh: SIGTERM runs the handler once and EXITS
+  PASS  case4a.sh: SIGHUP runs the handler once and EXITS
+  PASS  case4a.sh: SIGINT runs the handler once and EXITS
+  PASS  control: a trap WITHOUT exit does let the script continue
+  PASS  a FAIL row increments counts[FAIL] (the verdict is computed from it)
+  PASS  a PASS row increments counts[PASS]
+  PASS  cases123.sh (no channel): refuses, naming the missing channel
+  PASS  case5.sh (no channel): refuses, naming the missing channel
+  PASS  case4b.sh (no channel): refuses, naming the missing channel
+  PASS  case4-poller.sh (no channel): refuses, naming the missing channel
+  PASS  cases123.sh ['2']: refuses, naming the missing channel
+  PASS  case5.sh ['both']: refuses, naming the missing channel
+  PASS  case4b.sh ['']: refuses, naming the missing channel
+  PASS  tone.py without a channel: refuses with exit 1
+  PASS  case4a.sh without a channel: refuses with exit 1
+  PASS  dds-tone.sh 1 'OFF': rejected, does not energise
+  PASS  dds-tone.sh 1 'Off': rejected, does not energise
+  PASS  dds-tone.sh 1 'stop': rejected, does not energise
+  PASS  dds-tone.sh 1 '0': rejected, does not energise
+  PASS  dds-tone.sh 1 'off ': rejected, does not energise
+  PASS  dds-tone.sh 1 'ON': rejected, does not energise
+  PASS  dds-tone.sh 1 'xyz': rejected, does not energise
+  PASS  assert_quiet_after_enable fails closed when the read raises
+  PASS  assert_quiet_after_enable fails closed when the read returns None
+  PASS  assert_quiet_after_enable rejects a raised attenuator
+  PASS  assert_quiet_after_enable accepts a muted board
+  PASS  python route: no affirmation is refused, with the python command to fix it
+  PASS  python route: it pushes tx-guard.sh, then runs it with the arguments
+  PASS  python route: an affirmed write returns the read-back
+  PASS  python route: an unreachable board is not permission
+  PASS  avg-level: a tone reads 6.02 dB low (Hann coherent gain)
+  PASS  avg-level: noise in one ENBW reads low by the SAME amount, so a tone-derived constant needs no correction
+
+44/44 safety behaviours hold

@@ -1,0 +1,736 @@
+{
+  "as_of": "2026-11-02",
+  "binaries": {
+    "count": 1,
+    "items": [
+      {
+        "elf": {
+          "bss_bytes": 75784,
+          "code_bytes": 65624,
+          "data_bytes": 11656,
+          "e_flags": "0x5000400",
+          "e_type": 2,
+          "endianness": "little",
+          "entry": "0x0",
+          "file_size": 473444,
+          "flash_estimate_bytes": 94592,
+          "format": "ELF32",
+          "function_bytes_total": 63868,
+          "function_symbols": 367,
+          "machine": "ARM",
+          "object_symbols": 94,
+          "ram_static_estimate_bytes": 87440,
+          "rodata_bytes": 17312,
+          "sections": [
+            {
+              "addr": "0x0",
+              "alloc": true,
+              "exec": true,
+              "name": ".text",
+              "size": 65524,
+              "write": false
+            },
+            {
+              "addr": "0xfff4",
+              "alloc": true,
+              "exec": true,
+              "name": ".handoff",
+              "size": 76,
+              "write": false
+            },
+            {
+              "addr": "0x10040",
+              "alloc": true,
+              "exec": true,
+              "name": ".init",
+              "size": 12,
+              "write": false
+            },
+            {
+              "addr": "0x1004c",
+              "alloc": true,
+              "exec": true,
+              "name": ".fini",
+              "size": 12,
+              "write": false
+            },
+            {
+              "addr": "0x10058",
+              "alloc": true,
+              "exec": false,
+              "name": ".rodata",
+              "size": 924,
+              "write": false
+            },
+            {
+              "addr": "0x103f8",
+              "alloc": true,
+              "exec": false,
+              "name": ".data",
+              "size": 11648,
+              "write": true
+            },
+            {
+              "addr": "0x13178",
+              "alloc": true,
+              "exec": false,
+              "name": ".eh_frame",
+              "size": 4,
+              "write": false
+            },
+            {
+              "addr": "0x14000",
+              "alloc": true,
+              "exec": false,
+              "name": ".mmu_tbl",
+              "size": 16384,
+              "write": false
+            },
+            {
+              "addr": "0x18000",
+              "alloc": true,
+              "exec": false,
+              "name": ".init_array",
+              "size": 4,
+              "write": true
+            },
+            {
+              "addr": "0x18004",
+              "alloc": true,
+              "exec": false,
+              "name": ".fini_array",
+              "size": 4,
+              "write": true
+            },
+            {
+              "addr": "0x18008",
+              "alloc": true,
+              "exec": false,
+              "name": ".rsa_ac",
+              "size": 4152,
+              "write": true
+            },
+            {
+              "addr": "0x19040",
+              "alloc": false,
+              "exec": false,
+              "name": ".ARM.attributes",
+              "size": 51,
+              "write": false
+            },
+            {
+              "addr": "0x19040",
+              "alloc": true,
+              "exec": false,
+              "name": ".bss",
+              "size": 9156,
+              "write": true
+            },
+            {
+              "addr": "0x1b404",
+              "alloc": true,
+              "exec": false,
+              "name": ".heap",
+              "size": 8204,
+              "write": true
+            },
+            {
+              "addr": "0xffff0000",
+              "alloc": true,
+              "exec": false,
+              "name": ".stack",
+              "size": 54272,
+              "write": true
+            },
+            {
+              "addr": "0x0",
+              "alloc": false,
+              "exec": false,
+              "name": ".comment",
+              "size": 18,
+              "write": false
+            },
+            {
+              "addr": "0x0",
+              "alloc": false,
+              "exec": false,
+              "name": ".debug_line",
+              "size": 74664,
+              "write": false
+            },
+            {
+              "addr": "0x0",
+              "alloc": false,
+              "exec": false,
+              "name": ".debug_line_str",
+              "size": 184,
+              "write": false
+            },
+            {
+              "addr": "0x0",
+              "alloc": false,
+              "exec": false,
+              "name": ".debug_info",
+              "size": 103325,
+              "write": false
+            },
+            {
+              "addr": "0x0",
+              "alloc": false,
+              "exec": false,
+              "name": ".debug_abbrev",
+              "size": 16055,
+              "write": false
+            },
+            {
+              "addr": "0x0",
+              "alloc": false,
+              "exec": false,
+              "name": ".debug_aranges",
+              "size": 1000,
+              "write": false
+            },
+            {
+              "addr": "0x0",
+              "alloc": false,
+              "exec": false,
+              "name": ".debug_str",
+              "size": 10756,
+              "write": false
+            },
+            {
+              "addr": "0x0",
+              "alloc": false,
+              "exec": false,
+              "name": ".debug_frame",
+              "size": 7628,
+              "write": false
+            },
+            {
+              "addr": "0x0",
+              "alloc": false,
+              "exec": false,
+              "name": ".debug_loclists",
+              "size": 65588,
+              "write": false
+            },
+            {
+              "addr": "0x0",
+              "alloc": false,
+              "exec": false,
+              "name": ".debug_rnglists",
+              "size": 5066,
+              "write": false
+            },
+            {
+              "addr": "0x0",
+              "alloc": false,
+              "exec": false,
+              "name": ".symtab",
+              "size": 13552,
+              "write": false
+            },
+            {
+              "addr": "0x0",
+              "alloc": false,
+              "exec": false,
+              "name": ".strtab",
+              "size": 10253,
+              "write": false
+            },
+            {
+              "addr": "0x0",
+              "alloc": false,
+              "exec": false,
+              "name": ".shstrtab",
+              "size": 287,
+              "write": false
+            }
+          ],
+          "symbols": 847,
+          "top_functions_by_size": [
+            {
+              "name": "f_mkfs",
+              "size": 3148
+            },
+            {
+              "name": "MD5Transform",
+              "size": 2564
+            },
+            {
+              "name": "memcpy",
+              "size": 1504
+            },
+            {
+              "name": "XQspiPs_PolledTransfer",
+              "size": 1352
+            },
+            {
+              "name": "xil_vprintf",
+              "size": 1352
+            },
+            {
+              "name": "LoadBootImage",
+              "size": 1148
+            },
+            {
+              "name": "XQspiPs_Transfer",
+              "size": 928
+            },
+            {
+              "name": "mount_volume",
+              "size": 928
+            },
+            {
+              "name": "follow_path",
+              "size": 880
+            },
+            {
+              "name": "main",
+              "size": 852
+            },
+            {
+              "name": "XQspiPs_InterruptHandler",
+              "size": 816
+            },
+            {
+              "name": "f_write",
+              "size": 792
+            },
+            {
+              "name": "f_open",
+              "size": 736
+            },
+            {
+              "name": "f_read",
+              "size": 716
+            },
+            {
+              "name": "md5",
+              "size": 676
+            },
+            {
+              "name": "XDcfg_Transfer",
+              "size": 672
+            },
+            {
+              "name": "__divsi3",
+              "size": 660
+            },
+            {
+              "name": "f_lseek",
+              "size": 640
+            },
+            {
+              "name": "__udivsi3",
+              "size": 604
+            },
+            {
+              "name": "MD5Update",
+              "size": 600
+            }
+          ]
+        },
+        "kind": "elf",
+        "path": "build/fishball7020-fsbl.elf",
+        "rea": [
+          {
+            "command": "rea inspect-artifact /workspace/scratch/b99a64b46c2a/RSA-Sandbox/targets/tezuka-fw/build/fishball7020-fsbl.elf --json",
+            "exit_code": 0,
+            "operation": "inspect-artifact",
+            "output": "targets/tezuka-fw/rea/fishball7020-fsbl-elf.inspect-artifact.json",
+            "status": "ok",
+            "stderr_tail": ""
+          },
+          {
+            "command": "rea inspect-with-objdump /workspace/scratch/b99a64b46c2a/RSA-Sandbox/targets/tezuka-fw/build/fishball7020-fsbl.elf file_headers --json",
+            "exit_code": 1,
+            "operation": "objdump-file_headers",
+            "output": "targets/tezuka-fw/rea/fishball7020-fsbl-elf.objdump-file_headers.json",
+            "status": "failed",
+            "stderr_tail": ""
+          },
+          {
+            "command": "rea inspect-with-objdump /workspace/scratch/b99a64b46c2a/RSA-Sandbox/targets/tezuka-fw/build/fishball7020-fsbl.elf section_headers --json",
+            "exit_code": 1,
+            "operation": "objdump-section_headers",
+            "output": "targets/tezuka-fw/rea/fishball7020-fsbl-elf.objdump-section_headers.json",
+            "status": "failed",
+            "stderr_tail": ""
+          },
+          {
+            "command": "rea inspect-with-objdump /workspace/scratch/b99a64b46c2a/RSA-Sandbox/targets/tezuka-fw/build/fishball7020-fsbl.elf symbols --json",
+            "exit_code": 1,
+            "operation": "objdump-symbols",
+            "output": "targets/tezuka-fw/rea/fishball7020-fsbl-elf.objdump-symbols.json",
+            "status": "failed",
+            "stderr_tail": ""
+          }
+        ],
+        "sha256": "11fe9297125799e80ad0dac35b14f2f31beb8a2baefb59c9a46fba271e783543",
+        "size": 473444
+      }
+    ]
+  },
+  "build_fingerprint": "03eb4c50d0439e48",
+  "commit": "dba3dd89a036fa47936e1ea357029137df17f7df",
+  "complexity": {
+    "avg_ccn": 3.93,
+    "avg_function_nloc": 3.9,
+    "ccn_histogram": {
+      "1-5": 5244,
+      "11-20": 281,
+      "21-50": 155,
+      "51+": 25,
+      "6-10": 562
+    },
+    "files_analyzed": 124,
+    "function_nloc_total": 24392,
+    "functions": 6267,
+    "functions_ccn_gt_10": 461,
+    "functions_ccn_gt_20": 180,
+    "functions_ccn_gt_50": 25,
+    "max_ccn": 202,
+    "median_ccn": 2,
+    "p90_ccn": 8,
+    "tool": "lizard 1.25.0",
+    "top_complex_functions": [
+      {
+        "ccn": 202,
+        "file": "board/tezuka/common/msd/dash/assets/index-Bpez_SCj.js",
+        "function": "_v",
+        "nloc": 1,
+        "params": 3,
+        "start_line": 40,
+        "tokens": 3115
+      },
+      {
+        "ccn": 152,
+        "file": "board/tezuka/common/msd/dash/assets/index-Bpez_SCj.js",
+        "function": "(anonymous)",
+        "nloc": 1,
+        "params": 0,
+        "start_line": 37,
+        "tokens": 1603
+      },
+      {
+        "ccn": 119,
+        "file": "Dashboard/data.jsx",
+        "function": "applyMqtt",
+        "nloc": 137,
+        "params": 3,
+        "start_line": 14,
+        "tokens": 2052
+      },
+      {
+        "ccn": 105,
+        "file": "board/tezuka/common/msd/dash/assets/index-Bpez_SCj.js",
+        "function": "p.prototype.resolveObject",
+        "nloc": 1,
+        "params": 1,
+        "start_line": 46,
+        "tokens": 1574
+      },
+      {
+        "ccn": 103,
+        "file": "app/zynqrx/src/dvbs_s2hunt.cpp",
+        "function": "dect2::dvbs::s2Hunt",
+        "nloc": 209,
+        "params": 5,
+        "start_line": 172,
+        "tokens": 3504
+      },
+      {
+        "ccn": 103,
+        "file": "board/tezuka/common/msd/dash/assets/index-Bpez_SCj.js",
+        "function": "te",
+        "nloc": 1,
+        "params": 4,
+        "start_line": 42,
+        "tokens": 1346
+      },
+      {
+        "ccn": 102,
+        "file": "Dashboard/webtioune.jsx",
+        "function": "Webtioune",
+        "nloc": 151,
+        "params": 1,
+        "start_line": 330,
+        "tokens": 1962
+      },
+      {
+        "ccn": 98,
+        "file": "board/tezuka/common/msd/dash/assets/index-Bpez_SCj.js",
+        "function": "Mp",
+        "nloc": 1,
+        "params": 2,
+        "start_line": 40,
+        "tokens": 1497
+      },
+      {
+        "ccn": 95,
+        "file": "app/zynqrx/tools/zynqrx.cpp",
+        "function": "runSession",
+        "nloc": 173,
+        "params": 2,
+        "start_line": 436,
+        "tokens": 2861
+      },
+      {
+        "ccn": 85,
+        "file": "app/zynqrx/src/dvbs_spec.cpp",
+        "function": "dect2::dvbs::analyseOne",
+        "nloc": 181,
+        "params": 4,
+        "start_line": 93,
+        "tokens": 3238
+      },
+      {
+        "ccn": 81,
+        "file": "board/tezuka/common/msd/dash/assets/index-Bpez_SCj.js",
+        "function": "Qp",
+        "nloc": 1,
+        "params": 3,
+        "start_line": 40,
+        "tokens": 2047
+      },
+      {
+        "ccn": 77,
+        "file": "board/tezuka/common/msd/dash/assets/index-Bpez_SCj.js",
+        "function": "Wf",
+        "nloc": 1,
+        "params": 1,
+        "start_line": 37,
+        "tokens": 273
+      },
+      {
+        "ccn": 75,
+        "file": "app/zynqrx/tools/zynqrx.cpp",
+        "function": "cmdRx",
+        "nloc": 81,
+        "params": 2,
+        "start_line": 758,
+        "tokens": 1378
+      },
+      {
+        "ccn": 66,
+        "file": "board/tezuka/common/overlay_datv/root/vendor/mpegts/mpegts.js",
+        "function": "e.parseSPS",
+        "nloc": 1,
+        "params": 1,
+        "start_line": 1,
+        "tokens": 1990
+      },
+      {
+        "ccn": 66,
+        "file": "board/tezuka/common/overlay_datv/root/vendor/mpegts/mpegts.js",
+        "function": "t.prototype.parsePMT",
+        "nloc": 1,
+        "params": 1,
+        "start_line": 1,
+        "tokens": 1259
+      }
+    ]
+  },
+  "dependencies": {
+    "external_components": [
+      "@jtarrio/signals",
+      "esbuild"
+    ],
+    "idf_requires": [],
+    "manifests": [
+      "Dashboard/package.json"
+    ],
+    "unique_by_ecosystem": {
+      "npm": 2
+    },
+    "unique_count": 2
+  },
+  "excluded_dirs": [
+    ".git",
+    "build",
+    "managed_components",
+    "node_modules",
+    ".pio",
+    "dist",
+    "out",
+    "target",
+    ".venv",
+    "venv",
+    "__pycache__",
+    ".idea",
+    ".vscode"
+  ],
+  "git": {
+    "active_authors_last_90d": 1,
+    "age_days": 16,
+    "available": true,
+    "commits": 1,
+    "commits_by_month": {
+      "2026-10": 1
+    },
+    "commits_last_90d": 1,
+    "contributor_identities": 1,
+    "contributors": 1,
+    "days_since_last_commit": 16,
+    "first_commit": "2026-10-17T22:19:53+02:00",
+    "last_commit": "2026-10-17T22:19:53+02:00",
+    "tags": 0,
+    "top_contributors": [
+      "F5OEO"
+    ]
+  },
+  "github": {
+    "archived": false,
+    "available": true,
+    "created_at": "2024-09-20T13:22:38Z",
+    "default_branch": "main",
+    "forks": 108,
+    "full_name": "F5OEO/tezuka_fw",
+    "open_issues_and_prs": 88,
+    "pushed_at": "2026-11-01T19:22:49Z",
+    "stars": 486,
+    "topics": [
+      "adalm-pluto",
+      "antsdr",
+      "libresdr",
+      "pluto-sdr",
+      "plutoplus",
+      "plutosdr",
+      "plutosdr-firmware",
+      "sdr",
+      "tezuka"
+    ],
+    "watchers": 24
+  },
+  "license": {
+    "evidence": "LICENSE",
+    "files": [
+      "LICENSE"
+    ],
+    "spdx": "GPL-3.0"
+  },
+  "loc": {
+    "blank": 4520,
+    "by_language": [
+      {
+        "code": 11437,
+        "comment": 1169,
+        "files": 33,
+        "language": "JavaScript"
+      },
+      {
+        "code": 10676,
+        "comment": 1022,
+        "files": 29,
+        "language": "C++"
+      },
+      {
+        "code": 3899,
+        "comment": 1131,
+        "files": 59,
+        "language": "Shell"
+      },
+      {
+        "code": 3199,
+        "comment": 920,
+        "files": 9,
+        "language": "C"
+      },
+      {
+        "code": 2728,
+        "comment": 464,
+        "files": 14,
+        "language": "Markdown"
+      },
+      {
+        "code": 2523,
+        "comment": 781,
+        "files": 47,
+        "language": "C Header"
+      },
+      {
+        "code": 867,
+        "comment": 97,
+        "files": 6,
+        "language": "CSS"
+      },
+      {
+        "code": 691,
+        "comment": 47,
+        "files": 9,
+        "language": "HTML"
+      },
+      {
+        "code": 589,
+        "comment": 32,
+        "files": 6,
+        "language": "Python"
+      },
+      {
+        "code": 455,
+        "comment": 119,
+        "files": 3,
+        "language": "YAML"
+      },
+      {
+        "code": 218,
+        "comment": 43,
+        "files": 11,
+        "language": "Makefile"
+      },
+      {
+        "code": 139,
+        "comment": 39,
+        "files": 1,
+        "language": "Verilog"
+      },
+      {
+        "code": 119,
+        "comment": 0,
+        "files": 4,
+        "language": "JSON"
+      },
+      {
+        "code": 32,
+        "comment": 6,
+        "files": 1,
+        "language": "TOML"
+      }
+    ],
+    "code": 37572,
+    "code_programming": 32680,
+    "comment": 5870,
+    "files": 232,
+    "tool": "builtin (approximate)",
+    "vendored_dirs_counted": []
+  },
+  "name": "tezuka-fw",
+  "origin": "local:/workspace/scratch/b99a64b46c2a/sources/tezuka_fw",
+  "pcb": {
+    "available": false
+  },
+  "rsa_version": "0.1.3",
+  "schema": 1,
+  "slug": "tezuka-fw",
+  "tests_docs": {
+    "ci_workflows": [
+      ".github/workflows/main.yml",
+      ".github/workflows/pr-comment.yml"
+    ],
+    "doc_files": 38,
+    "doc_lines": 5126,
+    "readme": "README.md",
+    "readme_lines": 185,
+    "test_files": 0
+  },
+  "tools": {
+    "git": "git version 2.51.1",
+    "lizard": "1.25.0",
+    "python": "3.12.14",
+    "rea": "6.8.0",
+    "rsa": "0.1.3",
+    "scc": null
+  },
+  "type": "repo"
+}

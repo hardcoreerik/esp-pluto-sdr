@@ -1,0 +1,399 @@
+{
+  "as_of": "2026-11-02",
+  "binaries": {
+    "count": 0,
+    "items": []
+  },
+  "build_fingerprint": "e3b0c44298fc1c14",
+  "commit": "b374db56cb631d2c6286d7dc78c7438ae3918a3d",
+  "complexity": {
+    "avg_ccn": 3.68,
+    "avg_function_nloc": 12.7,
+    "ccn_histogram": {
+      "1-5": 1074,
+      "11-20": 61,
+      "21-50": 22,
+      "51+": 2,
+      "6-10": 131
+    },
+    "files_analyzed": 173,
+    "function_nloc_total": 16380,
+    "functions": 1290,
+    "functions_ccn_gt_10": 85,
+    "functions_ccn_gt_20": 24,
+    "functions_ccn_gt_50": 2,
+    "max_ccn": 67,
+    "median_ccn": 2.0,
+    "p90_ccn": 8,
+    "tool": "lizard 1.25.0",
+    "top_complex_functions": [
+      {
+        "ccn": 67,
+        "file": "tools/tx-burst/tx-burst.c",
+        "function": "main",
+        "nloc": 165,
+        "params": 2,
+        "start_line": 136,
+        "tokens": 1491
+      },
+      {
+        "ccn": 59,
+        "file": "tools/selftest/sdr_selftest.py",
+        "function": "test_loopback",
+        "nloc": 290,
+        "params": 5,
+        "start_line": 1104,
+        "tokens": 2717
+      },
+      {
+        "ccn": 48,
+        "file": "tools/automation/examples/svgplot.py",
+        "function": "render",
+        "nloc": 110,
+        "params": 4,
+        "start_line": 136,
+        "tokens": 1374
+      },
+      {
+        "ccn": 42,
+        "file": "tools/chirp-view/chirp_view.py",
+        "function": "rx_process",
+        "nloc": 146,
+        "params": 6,
+        "start_line": 611,
+        "tokens": 2106
+      },
+      {
+        "ccn": 38,
+        "file": "firmware-modern/verify_dtb.py",
+        "function": "main",
+        "nloc": 84,
+        "params": 1,
+        "start_line": 145,
+        "tokens": 707
+      },
+      {
+        "ccn": 34,
+        "file": "tools/chirp-view/chirp_view.py",
+        "function": "main",
+        "nloc": 129,
+        "params": 0,
+        "start_line": 1625,
+        "tokens": 1346
+      },
+      {
+        "ccn": 34,
+        "file": "tools/stream-paths/zc-stream/zc-stream.c",
+        "function": "main",
+        "nloc": 78,
+        "params": 2,
+        "start_line": 413,
+        "tokens": 800
+      },
+      {
+        "ccn": 31,
+        "file": "tools/selftest/sdr_selftest.py",
+        "function": "main",
+        "nloc": 116,
+        "params": 1,
+        "start_line": 1949,
+        "tokens": 859
+      },
+      {
+        "ccn": 31,
+        "file": "tools/automation/examples/beamformer.py",
+        "function": "main",
+        "nloc": 83,
+        "params": 0,
+        "start_line": 280,
+        "tokens": 926
+      },
+      {
+        "ccn": 28,
+        "file": "tools/automation/fishball_automation/server.py",
+        "function": "Transmit",
+        "nloc": 56,
+        "params": 3,
+        "start_line": 524,
+        "tokens": 463
+      },
+      {
+        "ccn": 27,
+        "file": "docs-site/style_check.py",
+        "function": "check",
+        "nloc": 42,
+        "params": 1,
+        "start_line": 48,
+        "tokens": 402
+      },
+      {
+        "ccn": 27,
+        "file": "tools/claude-pane/hooks/register.tsx",
+        "function": "alerts",
+        "nloc": 29,
+        "params": 2,
+        "start_line": 111,
+        "tokens": 317
+      },
+      {
+        "ccn": 26,
+        "file": "tools/sigmf-capture.py",
+        "function": "scan",
+        "nloc": 89,
+        "params": 8,
+        "start_line": 392,
+        "tokens": 865
+      },
+      {
+        "ccn": 26,
+        "file": "tools/check_card_image.py",
+        "function": "check_root",
+        "nloc": 45,
+        "params": 2,
+        "start_line": 114,
+        "tokens": 474
+      },
+      {
+        "ccn": 25,
+        "file": "tools/selftest/sdr_selftest.py",
+        "function": "test_board_scripts",
+        "nloc": 73,
+        "params": 2,
+        "start_line": 1566,
+        "tokens": 437
+      }
+    ]
+  },
+  "dependencies": {
+    "external_components": [
+      "PyQt6",
+      "cairocffi",
+      "cairosvg",
+      "grpcio",
+      "grpclib",
+      "mkdocs",
+      "mkdocs-material[imaging]",
+      "numpy",
+      "pillow",
+      "protobuf",
+      "pyadi-iio",
+      "pymdown-extensions",
+      "pyqtgraph",
+      "scipy",
+      "sounddevice"
+    ],
+    "idf_requires": [],
+    "manifests": [
+      "docs-site/requirements.txt",
+      "tools/automation/requirements.txt",
+      "tools/chirp-view/requirements.txt"
+    ],
+    "unique_by_ecosystem": {
+      "pip": 15
+    },
+    "unique_count": 15
+  },
+  "excluded_dirs": [
+    ".git",
+    "build",
+    "managed_components",
+    "node_modules",
+    ".pio",
+    "dist",
+    "out",
+    "target",
+    ".venv",
+    "venv",
+    "__pycache__",
+    ".idea",
+    ".vscode"
+  ],
+  "git": {
+    "active_authors_last_90d": 1,
+    "age_days": 27,
+    "available": true,
+    "commits": 1,
+    "commits_by_month": {
+      "2026-10": 1
+    },
+    "commits_last_90d": 1,
+    "contributor_identities": 1,
+    "contributors": 1,
+    "days_since_last_commit": 27,
+    "first_commit": "2026-10-06T01:04:42+02:00",
+    "last_commit": "2026-10-06T01:04:42+02:00",
+    "tags": 0,
+    "top_contributors": [
+      "Matthieu"
+    ]
+  },
+  "github": {
+    "archived": false,
+    "available": true,
+    "created_at": "2026-09-12T12:29:58Z",
+    "default_branch": "main",
+    "forks": 5,
+    "full_name": "matsvandamme/fishball7020-fpga-devkit",
+    "open_issues_and_prs": 0,
+    "pushed_at": "2026-10-05T23:04:43Z",
+    "stars": 17,
+    "topics": [
+      "7020-sdr",
+      "ad9361",
+      "adalm-pluto",
+      "buildroot",
+      "embedded-linux",
+      "fpga",
+      "gnuradio",
+      "libiio",
+      "pluto",
+      "plutosdr",
+      "plutosky",
+      "plutosky-r1",
+      "sdr",
+      "software-defined-radio",
+      "verilog",
+      "vivado",
+      "xc7z020",
+      "xilinx",
+      "zynq",
+      "zynq-7000"
+    ],
+    "watchers": 2
+  },
+  "license": {
+    "evidence": "LICENSE",
+    "files": [
+      "LICENSE"
+    ],
+    "spdx": "GPL-2.0"
+  },
+  "loc": {
+    "blank": 9602,
+    "by_language": [
+      {
+        "code": 42362,
+        "comment": 0,
+        "files": 14,
+        "language": "JSON"
+      },
+      {
+        "code": 21260,
+        "comment": 1726,
+        "files": 113,
+        "language": "Python"
+      },
+      {
+        "code": 13681,
+        "comment": 1899,
+        "files": 130,
+        "language": "Markdown"
+      },
+      {
+        "code": 6801,
+        "comment": 54,
+        "files": 1,
+        "language": "HTML"
+      },
+      {
+        "code": 3912,
+        "comment": 2239,
+        "files": 40,
+        "language": "Shell"
+      },
+      {
+        "code": 3839,
+        "comment": 0,
+        "files": 34,
+        "language": "Objective-C"
+      },
+      {
+        "code": 1352,
+        "comment": 609,
+        "files": 9,
+        "language": "YAML"
+      },
+      {
+        "code": 1053,
+        "comment": 75,
+        "files": 3,
+        "language": "TypeScript"
+      },
+      {
+        "code": 796,
+        "comment": 440,
+        "files": 20,
+        "language": "C"
+      },
+      {
+        "code": 279,
+        "comment": 89,
+        "files": 2,
+        "language": "Verilog"
+      },
+      {
+        "code": 209,
+        "comment": 43,
+        "files": 1,
+        "language": "CSS"
+      },
+      {
+        "code": 162,
+        "comment": 1,
+        "files": 1,
+        "language": "JavaScript"
+      },
+      {
+        "code": 67,
+        "comment": 31,
+        "files": 3,
+        "language": "Makefile"
+      },
+      {
+        "code": 0,
+        "comment": 408,
+        "files": 2,
+        "language": "C Header"
+      }
+    ],
+    "code": 95773,
+    "code_programming": 31368,
+    "comment": 7614,
+    "files": 373,
+    "tool": "builtin (approximate)",
+    "vendored_dirs_counted": []
+  },
+  "name": "fishball7020-fpga-devkit",
+  "origin": "local:/workspace/scratch/b99a64b46c2a/sources/fishball7020-fpga-devkit",
+  "pcb": {
+    "available": false
+  },
+  "rsa_version": "0.1.3",
+  "schema": 1,
+  "slug": "fishball7020-fpga-devkit",
+  "tests_docs": {
+    "ci_workflows": [
+      ".github/workflows/docs.yml",
+      ".github/workflows/hardware.yml",
+      ".github/workflows/host-tools.yml",
+      ".github/workflows/release.yml",
+      ".github/workflows/verify-modern.yml",
+      ".github/workflows/verify-patches.yml",
+      ".github/workflows/verify-rootfs.yml"
+    ],
+    "doc_files": 314,
+    "doc_lines": 19630,
+    "readme": "README.md",
+    "readme_lines": 150,
+    "test_files": 10
+  },
+  "tools": {
+    "git": "git version 2.51.1",
+    "lizard": "1.25.0",
+    "python": "3.12.14",
+    "rea": null,
+    "rsa": "0.1.3",
+    "scc": null
+  },
+  "type": "repo"
+}

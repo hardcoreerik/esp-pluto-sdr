@@ -1,0 +1,15 @@
+{
+  "commit": "dba3dd89a036fa47936e1ea357029137df17f7df",
+  "commit_date": "2026-10-17T22:19:53+02:00",
+  "imported_at": "2026-11-02T13:57:13-08:00",
+  "license": "GPL-3.0",
+  "name": "tezuka-fw",
+  "origin": "local:/workspace/scratch/b99a64b46c2a/sources/tezuka_fw",
+  "requested_ref": null,
+  "schema": 1,
+  "slug": "tezuka-fw",
+  "source_dirty_uncommitted_changes_excluded": true,
+  "spec": "local:/workspace/scratch/b99a64b46c2a/sources/tezuka_fw",
+  "type": "repo",
+  "upstream_remote": "https://github.com/F5OEO/tezuka_fw.git"
+}

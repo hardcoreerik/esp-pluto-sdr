@@ -1,0 +1,15 @@
+{
+  "commit": "3b689562bfef2e9312a18cf3dba093c1fc00bc72",
+  "commit_date": "2026-08-13T23:21:28+02:00",
+  "imported_at": "2026-11-02T13:58:46-08:00",
+  "license": "unrecognized",
+  "name": "plutosdr-fw",
+  "origin": "local:/workspace/scratch/b99a64b46c2a/sources/plutosdr-fw",
+  "requested_ref": null,
+  "schema": 1,
+  "slug": "plutosdr-fw",
+  "source_dirty_uncommitted_changes_excluded": false,
+  "spec": "local:/workspace/scratch/b99a64b46c2a/sources/plutosdr-fw",
+  "type": "repo",
+  "upstream_remote": "https://github.com/analogdevicesinc/plutosdr-fw.git"
+}

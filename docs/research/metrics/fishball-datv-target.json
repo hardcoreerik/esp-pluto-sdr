@@ -1,0 +1,15 @@
+{
+  "commit": "ab343de161918e4baa691dce0a25fc5549324d9a",
+  "commit_date": "2026-02-10T13:06:34+01:00",
+  "imported_at": "2026-11-02T13:57:31-08:00",
+  "license": "GPL-3.0",
+  "name": "fishball-datv",
+  "origin": "local:/workspace/scratch/b99a64b46c2a/sources/Fishball_DATV",
+  "requested_ref": null,
+  "schema": 1,
+  "slug": "fishball-datv",
+  "source_dirty_uncommitted_changes_excluded": false,
+  "spec": "local:/workspace/scratch/b99a64b46c2a/sources/Fishball_DATV",
+  "type": "repo",
+  "upstream_remote": "https://github.com/plantjes1/Fishball_DATV.git"
+}
