@@ -1,0 +1,5 @@
+version: "0.1.0-dev"
+description: "Experimental independent Pluto-compatible legacy IIOD RX client"
+url: "https://github.com/hardcoreerik/esp-pluto-sdr"
+dependencies:
+  idf: ">=5.3"
