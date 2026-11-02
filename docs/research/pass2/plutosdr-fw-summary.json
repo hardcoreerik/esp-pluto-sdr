@@ -1,0 +1,220 @@
+{
+  "as_of": "2026-11-02",
+  "binaries": {
+    "count": 0,
+    "items": []
+  },
+  "build_fingerprint": "e3b0c44298fc1c14",
+  "commit": "3b689562bfef2e9312a18cf3dba093c1fc00bc72",
+  "complexity": {
+    "avg_ccn": 3,
+    "avg_function_nloc": 19,
+    "ccn_histogram": {
+      "1-5": 4,
+      "11-20": 0,
+      "21-50": 0,
+      "51+": 0,
+      "6-10": 0
+    },
+    "files_analyzed": 2,
+    "function_nloc_total": 76,
+    "functions": 4,
+    "functions_ccn_gt_10": 0,
+    "functions_ccn_gt_20": 0,
+    "functions_ccn_gt_50": 0,
+    "max_ccn": 5,
+    "median_ccn": 3.0,
+    "p90_ccn": 5,
+    "tool": "lizard 1.25.0",
+    "top_complex_functions": [
+      {
+        "ccn": 5,
+        "file": "scripts/merge_cyclonedx.py",
+        "function": "main",
+        "nloc": 25,
+        "params": 0,
+        "start_line": 87,
+        "tokens": 247
+      },
+      {
+        "ccn": 4,
+        "file": "scripts/merge_cyclonedx.py",
+        "function": "make_component",
+        "nloc": 15,
+        "params": 1,
+        "start_line": 36,
+        "tokens": 94
+      },
+      {
+        "ccn": 2,
+        "file": "scripts/merge_cyclonedx.py",
+        "function": "parse_extra_pkg",
+        "nloc": 7,
+        "params": 1,
+        "start_line": 27,
+        "tokens": 62
+      },
+      {
+        "ccn": 1,
+        "file": "scripts/merge_cyclonedx.py",
+        "function": "new_cdx_doc",
+        "nloc": 29,
+        "params": 2,
+        "start_line": 56,
+        "tokens": 122
+      }
+    ]
+  },
+  "dependencies": {
+    "external_components": [
+      "https://github.com/analogdevicesinc/br2-external.git",
+      "https://github.com/analogdevicesinc/buildroot.git",
+      "https://github.com/analogdevicesinc/hdl",
+      "https://github.com/analogdevicesinc/linux",
+      "https://github.com/analogdevicesinc/u-boot.git"
+    ],
+    "idf_requires": [],
+    "manifests": [
+      ".gitmodules"
+    ],
+    "unique_by_ecosystem": {
+      "git-submodule": 5
+    },
+    "unique_count": 5
+  },
+  "excluded_dirs": [
+    ".git",
+    "build",
+    "managed_components",
+    "node_modules",
+    ".pio",
+    "dist",
+    "out",
+    "target",
+    ".venv",
+    "venv",
+    "__pycache__",
+    ".idea",
+    ".vscode"
+  ],
+  "git": {
+    "active_authors_last_90d": 1,
+    "age_days": 81,
+    "available": true,
+    "commits": 1,
+    "commits_by_month": {
+      "2026-08": 1
+    },
+    "commits_last_90d": 1,
+    "contributor_identities": 1,
+    "contributors": 1,
+    "days_since_last_commit": 81,
+    "first_commit": "2026-08-13T23:21:28+02:00",
+    "last_commit": "2026-08-13T23:21:28+02:00",
+    "tags": 0,
+    "top_contributors": [
+      "Michael Hennerich"
+    ]
+  },
+  "github": {
+    "archived": false,
+    "available": true,
+    "created_at": "2016-11-02T13:12:46Z",
+    "default_branch": "master",
+    "forks": 275,
+    "full_name": "analogdevicesinc/plutosdr-fw",
+    "open_issues_and_prs": 11,
+    "pushed_at": "2026-08-13T21:21:29Z",
+    "stars": 479,
+    "topics": [
+      "active-learning-module",
+      "adalm-pluto",
+      "fpga",
+      "hdl",
+      "iio",
+      "linux",
+      "plutosdr",
+      "plutosdr-firmware",
+      "plutosdr-fw",
+      "rf",
+      "sdr",
+      "transceiver"
+    ],
+    "watchers": 68
+  },
+  "license": {
+    "evidence": null,
+    "files": [
+      "LICENSE.md"
+    ],
+    "spdx": "unrecognized"
+  },
+  "loc": {
+    "blank": 209,
+    "by_language": [
+      {
+        "code": 351,
+        "comment": 83,
+        "files": 4,
+        "language": "Shell"
+      },
+      {
+        "code": 212,
+        "comment": 26,
+        "files": 1,
+        "language": "Makefile"
+      },
+      {
+        "code": 194,
+        "comment": 25,
+        "files": 2,
+        "language": "Python"
+      },
+      {
+        "code": 127,
+        "comment": 10,
+        "files": 2,
+        "language": "Markdown"
+      },
+      {
+        "code": 16,
+        "comment": 0,
+        "files": 1,
+        "language": "YAML"
+      }
+    ],
+    "code": 900,
+    "code_programming": 757,
+    "comment": 144,
+    "files": 10,
+    "tool": "builtin (approximate)",
+    "vendored_dirs_counted": []
+  },
+  "name": "plutosdr-fw",
+  "origin": "local:/workspace/scratch/b99a64b46c2a/sources/plutosdr-fw",
+  "pcb": {
+    "available": false
+  },
+  "rsa_version": "0.1.3",
+  "schema": 1,
+  "slug": "plutosdr-fw",
+  "tests_docs": {
+    "ci_workflows": [
+      ".github/workflows/trigger-sync.yml"
+    ],
+    "doc_files": 2,
+    "doc_lines": 164,
+    "readme": "README.md",
+    "readme_lines": 122,
+    "test_files": 0
+  },
+  "tools": {
+    "git": "git version 2.51.1",
+    "lizard": "1.25.0",
+    "python": "3.12.14",
+    "rea": null,
+    "rsa": "0.1.3",
+    "scc": null
+  },
+  "type": "repo"
+}

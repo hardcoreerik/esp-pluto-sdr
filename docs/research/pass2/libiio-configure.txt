@@ -1,0 +1,55 @@
+-- cmake version: 4.4.4
+-- The C compiler identification is GNU 13.3.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Performing Test HAS_LD_VERSION_SCRIPT
+-- Performing Test HAS_LD_VERSION_SCRIPT - Success
+-- Performing Test HAS_LD_UNDEFINED_VERSION
+-- Performing Test HAS_LD_UNDEFINED_VERSION - Success
+-- Performing Test HAS_WPEDANTIC
+-- Performing Test HAS_WPEDANTIC - Success
+-- Performing Test HAS_WSHADOW
+-- Performing Test HAS_WSHADOW - Success
+-- Looking for strdup
+-- Looking for strdup - found
+-- Looking for strndup
+-- Looking for strndup - found
+-- Looking for strerror_r
+-- Looking for strerror_r - found
+-- Looking for strtok_r
+-- Looking for strtok_r - found
+-- Looking for newlocale
+-- Looking for newlocale - found
+-- Looking for clock_gettime
+-- Looking for clock_gettime - found
+-- Looking for netdb.h
+-- Looking for netdb.h - found
+-- Looking for in6addr_any
+-- Looking for in6addr_any - found
+-- Found Git: /usr/local/bin/git (found version "2.51.1")
+-- Performing Test WITH_NETWORK_EVENTFD
+-- Performing Test WITH_NETWORK_EVENTFD - Success
+-- Could NOT find LibXml2 (missing: LIBXML2_LIBRARY LIBXML2_INCLUDE_DIR) 
+CMake Error at CMakeLists.txt:857 (message):
+  Unable to find libxml2 dependency.
+
+  If you want to disable the XML and EMU backends, set WITH_XML_BACKEND=OFF
+  and WITH_EMU_BACKEND=OFF.
+
+
+-- Looking for pthread_setname_np
+-- Looking for pthread_setname_np - found
+CMake Error at CMakeLists.txt:1003 (message):
+  Sorry, IIOD async.  API requires ZSTD support.
+
+  Set WITH_ZSTD=ON to enable it.
+
+
+-- Features enabled : compat xml network ipv6 utils shared-libs man-utils
+-- Features disabled: emu zstd dns-sd avahi bonjour serial local local-dmabuf local-mmap hwmon usb iiod-emu examples libtinyiiod iiod modules usb-dynamic network-dynamic serial-dynamic emu-dynamic udev-rule iiod-hotplug-rule local-config osx-framework -Werror tests tests-debug gcov man c#-bindings c++-bindings c++-examples license_check
+-- Install Path set to '/usr', modify with -DCMAKE_INSTALL_PREFIX=/path
+-- LOG_LEVEL set to "Info"
+-- Configuring incomplete, errors occurred!

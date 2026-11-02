@@ -15,3 +15,5 @@ modern target, FPGA image and USB mode remain unverified. This is a research bra
 
 The standalone component must never depend on OrcSDR. OrcSDR will own its adapter.
 Source findings establish design constraints; they do not establish compatibility with Erik's physical board.
+
+Latest executed analysis: [RSA/REA pass 2](pass2/README.md).

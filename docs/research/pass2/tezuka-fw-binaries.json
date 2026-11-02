@@ -1,0 +1,369 @@
+[
+  {
+    "elf": {
+      "bss_bytes": 75784,
+      "code_bytes": 65624,
+      "data_bytes": 11656,
+      "e_flags": "0x5000400",
+      "e_type": 2,
+      "endianness": "little",
+      "entry": "0x0",
+      "file_size": 473444,
+      "flash_estimate_bytes": 94592,
+      "format": "ELF32",
+      "function_bytes_total": 63868,
+      "function_symbols": 367,
+      "machine": "ARM",
+      "object_symbols": 94,
+      "ram_static_estimate_bytes": 87440,
+      "rodata_bytes": 17312,
+      "sections": [
+        {
+          "addr": "0x0",
+          "alloc": true,
+          "exec": true,
+          "name": ".text",
+          "size": 65524,
+          "write": false
+        },
+        {
+          "addr": "0xfff4",
+          "alloc": true,
+          "exec": true,
+          "name": ".handoff",
+          "size": 76,
+          "write": false
+        },
+        {
+          "addr": "0x10040",
+          "alloc": true,
+          "exec": true,
+          "name": ".init",
+          "size": 12,
+          "write": false
+        },
+        {
+          "addr": "0x1004c",
+          "alloc": true,
+          "exec": true,
+          "name": ".fini",
+          "size": 12,
+          "write": false
+        },
+        {
+          "addr": "0x10058",
+          "alloc": true,
+          "exec": false,
+          "name": ".rodata",
+          "size": 924,
+          "write": false
+        },
+        {
+          "addr": "0x103f8",
+          "alloc": true,
+          "exec": false,
+          "name": ".data",
+          "size": 11648,
+          "write": true
+        },
+        {
+          "addr": "0x13178",
+          "alloc": true,
+          "exec": false,
+          "name": ".eh_frame",
+          "size": 4,
+          "write": false
+        },
+        {
+          "addr": "0x14000",
+          "alloc": true,
+          "exec": false,
+          "name": ".mmu_tbl",
+          "size": 16384,
+          "write": false
+        },
+        {
+          "addr": "0x18000",
+          "alloc": true,
+          "exec": false,
+          "name": ".init_array",
+          "size": 4,
+          "write": true
+        },
+        {
+          "addr": "0x18004",
+          "alloc": true,
+          "exec": false,
+          "name": ".fini_array",
+          "size": 4,
+          "write": true
+        },
+        {
+          "addr": "0x18008",
+          "alloc": true,
+          "exec": false,
+          "name": ".rsa_ac",
+          "size": 4152,
+          "write": true
+        },
+        {
+          "addr": "0x19040",
+          "alloc": false,
+          "exec": false,
+          "name": ".ARM.attributes",
+          "size": 51,
+          "write": false
+        },
+        {
+          "addr": "0x19040",
+          "alloc": true,
+          "exec": false,
+          "name": ".bss",
+          "size": 9156,
+          "write": true
+        },
+        {
+          "addr": "0x1b404",
+          "alloc": true,
+          "exec": false,
+          "name": ".heap",
+          "size": 8204,
+          "write": true
+        },
+        {
+          "addr": "0xffff0000",
+          "alloc": true,
+          "exec": false,
+          "name": ".stack",
+          "size": 54272,
+          "write": true
+        },
+        {
+          "addr": "0x0",
+          "alloc": false,
+          "exec": false,
+          "name": ".comment",
+          "size": 18,
+          "write": false
+        },
+        {
+          "addr": "0x0",
+          "alloc": false,
+          "exec": false,
+          "name": ".debug_line",
+          "size": 74664,
+          "write": false
+        },
+        {
+          "addr": "0x0",
+          "alloc": false,
+          "exec": false,
+          "name": ".debug_line_str",
+          "size": 184,
+          "write": false
+        },
+        {
+          "addr": "0x0",
+          "alloc": false,
+          "exec": false,
+          "name": ".debug_info",
+          "size": 103325,
+          "write": false
+        },
+        {
+          "addr": "0x0",
+          "alloc": false,
+          "exec": false,
+          "name": ".debug_abbrev",
+          "size": 16055,
+          "write": false
+        },
+        {
+          "addr": "0x0",
+          "alloc": false,
+          "exec": false,
+          "name": ".debug_aranges",
+          "size": 1000,
+          "write": false
+        },
+        {
+          "addr": "0x0",
+          "alloc": false,
+          "exec": false,
+          "name": ".debug_str",
+          "size": 10756,
+          "write": false
+        },
+        {
+          "addr": "0x0",
+          "alloc": false,
+          "exec": false,
+          "name": ".debug_frame",
+          "size": 7628,
+          "write": false
+        },
+        {
+          "addr": "0x0",
+          "alloc": false,
+          "exec": false,
+          "name": ".debug_loclists",
+          "size": 65588,
+          "write": false
+        },
+        {
+          "addr": "0x0",
+          "alloc": false,
+          "exec": false,
+          "name": ".debug_rnglists",
+          "size": 5066,
+          "write": false
+        },
+        {
+          "addr": "0x0",
+          "alloc": false,
+          "exec": false,
+          "name": ".symtab",
+          "size": 13552,
+          "write": false
+        },
+        {
+          "addr": "0x0",
+          "alloc": false,
+          "exec": false,
+          "name": ".strtab",
+          "size": 10253,
+          "write": false
+        },
+        {
+          "addr": "0x0",
+          "alloc": false,
+          "exec": false,
+          "name": ".shstrtab",
+          "size": 287,
+          "write": false
+        }
+      ],
+      "symbols": 847,
+      "top_functions_by_size": [
+        {
+          "name": "f_mkfs",
+          "size": 3148
+        },
+        {
+          "name": "MD5Transform",
+          "size": 2564
+        },
+        {
+          "name": "memcpy",
+          "size": 1504
+        },
+        {
+          "name": "XQspiPs_PolledTransfer",
+          "size": 1352
+        },
+        {
+          "name": "xil_vprintf",
+          "size": 1352
+        },
+        {
+          "name": "LoadBootImage",
+          "size": 1148
+        },
+        {
+          "name": "XQspiPs_Transfer",
+          "size": 928
+        },
+        {
+          "name": "mount_volume",
+          "size": 928
+        },
+        {
+          "name": "follow_path",
+          "size": 880
+        },
+        {
+          "name": "main",
+          "size": 852
+        },
+        {
+          "name": "XQspiPs_InterruptHandler",
+          "size": 816
+        },
+        {
+          "name": "f_write",
+          "size": 792
+        },
+        {
+          "name": "f_open",
+          "size": 736
+        },
+        {
+          "name": "f_read",
+          "size": 716
+        },
+        {
+          "name": "md5",
+          "size": 676
+        },
+        {
+          "name": "XDcfg_Transfer",
+          "size": 672
+        },
+        {
+          "name": "__divsi3",
+          "size": 660
+        },
+        {
+          "name": "f_lseek",
+          "size": 640
+        },
+        {
+          "name": "__udivsi3",
+          "size": 604
+        },
+        {
+          "name": "MD5Update",
+          "size": 600
+        }
+      ]
+    },
+    "kind": "elf",
+    "path": "build/fishball7020-fsbl.elf",
+    "rea": [
+      {
+        "command": "rea inspect-artifact /workspace/scratch/b99a64b46c2a/RSA-Sandbox/targets/tezuka-fw/build/fishball7020-fsbl.elf --json",
+        "exit_code": 0,
+        "operation": "inspect-artifact",
+        "output": "targets/tezuka-fw/rea/fishball7020-fsbl-elf.inspect-artifact.json",
+        "status": "ok",
+        "stderr_tail": ""
+      },
+      {
+        "command": "rea inspect-with-objdump /workspace/scratch/b99a64b46c2a/RSA-Sandbox/targets/tezuka-fw/build/fishball7020-fsbl.elf file_headers --json",
+        "exit_code": 1,
+        "operation": "objdump-file_headers",
+        "output": "targets/tezuka-fw/rea/fishball7020-fsbl-elf.objdump-file_headers.json",
+        "status": "failed",
+        "stderr_tail": ""
+      },
+      {
+        "command": "rea inspect-with-objdump /workspace/scratch/b99a64b46c2a/RSA-Sandbox/targets/tezuka-fw/build/fishball7020-fsbl.elf section_headers --json",
+        "exit_code": 1,
+        "operation": "objdump-section_headers",
+        "output": "targets/tezuka-fw/rea/fishball7020-fsbl-elf.objdump-section_headers.json",
+        "status": "failed",
+        "stderr_tail": ""
+      },
+      {
+        "command": "rea inspect-with-objdump /workspace/scratch/b99a64b46c2a/RSA-Sandbox/targets/tezuka-fw/build/fishball7020-fsbl.elf symbols --json",
+        "exit_code": 1,
+        "operation": "objdump-symbols",
+        "output": "targets/tezuka-fw/rea/fishball7020-fsbl-elf.objdump-symbols.json",
+        "status": "failed",
+        "stderr_tail": ""
+      }
+    ],
+    "sha256": "11fe9297125799e80ad0dac35b14f2f31beb8a2baefb59c9a46fba271e783543",
+    "size": 473444
+  }
+]
