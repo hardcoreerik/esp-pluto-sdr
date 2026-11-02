@@ -1,0 +1,33 @@
+amplitude calibration: a full-scale tone must read 0 dBFS
+  PASS  2047 LSB reads +0 dBFS  (-0.004)
+  PASS  204.7 LSB reads -20 dBFS  (-20.004)
+  PASS  20.47 LSB reads -40 dBFS  (-40.004)
+  PASS  2.047 LSB reads -60 dBFS  (-60.004)
+negative frequencies land on the correct side of DC
+  PASS  a tone at -750 kHz is found there  (-0.004 dBFS)
+  PASS  and not at +750 kHz
+image rejection is measured, not invented
+  PASS  a 60 dBc image reads 60 dBc  (60.00)
+harmonics are separated from the fundamental
+  PASS  a -40 dBc second harmonic reads -40 dBc  (-40.00)
+the pure-Python FFT matches numpy where it matters
+  PASS  fundamental agrees within 0.01 dB  (-0.0042 vs -0.0042)
+  PASS  -60 dBc image agrees within 0.01 dB  (-60.0042 vs -60.0042)
+  SKIP  noise floor (reported, not asserted)  (-306.2266 vs -306.2266)
+slope fitting
+  PASS  a perfect 1:1 sweep fits 1.000  (1.0000, worst residual 0.00e+00)
+  PASS  a compressed sweep fits 0.800  (0.8000)
+  PASS  a bent sweep shows a residual  (worst residual 1.43 dB)
+the transmit floor keeps the PA below what the receiver survives
+  PASS  worst-case output is >=10 dB under the RX rating  (-10.0 dBm into a bare cable vs +2.5 dBm rated: 12.5 dB of margin)
+  PASS  the PA gain used for the budget is the datasheet worst case  (18 dB (PGA-102+ is 17.7 dB at 50 MHz))
+  PASS  sweeps start quieter than the floor  (start 50 dB, floor 35 dB)
+  PASS  the receiver is kept away from full scale  (-22 dBFS)
+  PASS  the RX gain sweep stays below the gain table's LNA transition  (38-51 dB is the widest window with no LNA transition in it)
+the BIST checks reach debugfs over IIOD, with no shell
+  PASS  a debug write says DEBUG, and sends a NUL-terminated payload  ('WRITE ad9361-phy DEBUG bist_timing_analysis 2\r\n1\x00')
+  PASS  a debug read says DEBUG and returns the payload  ('READ ad9361-phy DEBUG bist_timing_analysis\r\n')
+  PASS  the eye scan takes no Shell  (BIST runs whether or not --ssh was given)
+  PASS  nothing echoes into a debugfs path any more  (Shell is only used for /mnt/jffs2 now)
+
+all measurement checks passed

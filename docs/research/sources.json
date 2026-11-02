@@ -1,0 +1,47 @@
+[
+  {
+    "slug": "tezuka-fw",
+    "repository": "https://github.com/F5OEO/tezuka_fw",
+    "commit": "dba3dd89a036fa47936e1ea357029137df17f7df",
+    "accessed": "2026-11-02",
+    "status": "source-reviewed",
+    "submodules_fetched": false,
+    "tracked_file_count": 901
+  },
+  {
+    "slug": "fishball7020-fpga-devkit",
+    "repository": "https://github.com/matsvandamme/fishball7020-fpga-devkit",
+    "commit": "b374db56cb631d2c6286d7dc78c7438ae3918a3d",
+    "accessed": "2026-11-02",
+    "status": "source-reviewed",
+    "submodules_fetched": false,
+    "tracked_file_count": 678
+  },
+  {
+    "slug": "fishball-datv",
+    "repository": "https://github.com/plantjes1/Fishball_DATV",
+    "commit": "ab343de161918e4baa691dce0a25fc5549324d9a",
+    "accessed": "2026-11-02",
+    "status": "source-reviewed",
+    "submodules_fetched": false,
+    "tracked_file_count": 496
+  },
+  {
+    "slug": "libiio",
+    "repository": "https://github.com/analogdevicesinc/libiio",
+    "commit": "ddac2991667ee897363c8ecd45d1dc3f6c3a7608",
+    "accessed": "2026-11-02",
+    "status": "source-reviewed",
+    "submodules_fetched": false,
+    "tracked_file_count": 645
+  },
+  {
+    "slug": "plutosdr-fw",
+    "repository": "https://github.com/analogdevicesinc/plutosdr-fw",
+    "commit": "3b689562bfef2e9312a18cf3dba093c1fc00bc72",
+    "accessed": "2026-11-02",
+    "status": "reference-collected",
+    "submodules_fetched": false,
+    "tracked_file_count": 27
+  }
+]

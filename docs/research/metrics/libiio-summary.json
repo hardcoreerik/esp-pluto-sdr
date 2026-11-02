@@ -1,0 +1,443 @@
+{
+  "as_of": "2026-11-02",
+  "binaries": {
+    "count": 0,
+    "items": []
+  },
+  "build_fingerprint": "e3b0c44298fc1c14",
+  "commit": "ddac2991667ee897363c8ecd45d1dc3f6c3a7608",
+  "complexity": {
+    "avg_ccn": 4.33,
+    "avg_function_nloc": 17.1,
+    "ccn_histogram": {
+      "1-5": 1651,
+      "11-20": 127,
+      "21-50": 40,
+      "51+": 6,
+      "6-10": 261
+    },
+    "files_analyzed": 184,
+    "function_nloc_total": 35560,
+    "functions": 2085,
+    "functions_ccn_gt_10": 173,
+    "functions_ccn_gt_20": 46,
+    "functions_ccn_gt_50": 6,
+    "max_ccn": 342,
+    "median_ccn": 2,
+    "p90_ccn": 10,
+    "tool": "lizard 1.25.0",
+    "top_complex_functions": [
+      {
+        "ccn": 342,
+        "file": "utils/iio_attr.c",
+        "function": "main",
+        "nloc": 725,
+        "params": 2,
+        "start_line": 402,
+        "tokens": 4179
+      },
+      {
+        "ccn": 94,
+        "file": "utils/iio_rwdev.c",
+        "function": "main",
+        "nloc": 315,
+        "params": 2,
+        "start_line": 279,
+        "tokens": 1814
+      },
+      {
+        "ccn": 90,
+        "file": "utils/iio_stresstest.c",
+        "function": "main",
+        "nloc": 335,
+        "params": 2,
+        "start_line": 388,
+        "tokens": 2664
+      },
+      {
+        "ccn": 79,
+        "file": "utils-windows.h",
+        "function": "translate_wsa_error_to_posix",
+        "nloc": 141,
+        "params": 1,
+        "start_line": 30,
+        "tokens": 496
+      },
+      {
+        "ccn": 57,
+        "file": "deps/wingetopt/src/getopt.c",
+        "function": "getopt_internal",
+        "nloc": 137,
+        "params": 6,
+        "start_line": 323,
+        "tokens": 829
+      },
+      {
+        "ccn": 56,
+        "file": "iiod/ops.c",
+        "function": "rw_thd",
+        "nloc": 176,
+        "params": 2,
+        "start_line": 418,
+        "tokens": 1198
+      },
+      {
+        "ccn": 49,
+        "file": "deps/mdns/mdns.c",
+        "function": "open_client_sockets",
+        "nloc": 180,
+        "params": 3,
+        "start_line": 454,
+        "tokens": 1260
+      },
+      {
+        "ccn": 49,
+        "file": "utils/iio_info.c",
+        "function": "main",
+        "nloc": 170,
+        "params": 2,
+        "start_line": 248,
+        "tokens": 1117
+      },
+      {
+        "ccn": 44,
+        "file": "deps/mdns/mdns.c",
+        "function": "service_callback",
+        "nloc": 150,
+        "params": 15,
+        "start_line": 181,
+        "tokens": 1439
+      },
+      {
+        "ccn": 43,
+        "file": "examples/dummy-iiostream.c",
+        "function": "main",
+        "nloc": 170,
+        "params": 2,
+        "start_line": 226,
+        "tokens": 1165
+      },
+      {
+        "ccn": 42,
+        "file": "utils/iio_stresstest.c",
+        "function": "client_thread",
+        "nloc": 141,
+        "params": 1,
+        "start_line": 215,
+        "tokens": 980
+      },
+      {
+        "ccn": 41,
+        "file": "utils/iio_common.c",
+        "function": "handle_common_opts",
+        "nloc": 117,
+        "params": 6,
+        "start_line": 253,
+        "tokens": 663
+      },
+      {
+        "ccn": 39,
+        "file": "emu.c",
+        "function": "create_device",
+        "nloc": 118,
+        "params": 2,
+        "start_line": 711,
+        "tokens": 840
+      },
+      {
+        "ccn": 37,
+        "file": "xml.c",
+        "function": "create_device",
+        "nloc": 110,
+        "params": 2,
+        "start_line": 300,
+        "tokens": 774
+      },
+      {
+        "ccn": 36,
+        "file": "iiod/network.c",
+        "function": "network_main",
+        "nloc": 140,
+        "params": 2,
+        "start_line": 79,
+        "tokens": 1002
+      }
+    ]
+  },
+  "dependencies": {
+    "external_components": [
+      "breathe",
+      "git",
+      "https",
+      "myst-parser",
+      "sphinx",
+      "sphinx-inline-tabs",
+      "sphinxcontrib-matlabdomain",
+      "sphinxcontrib.wavedrom"
+    ],
+    "idf_requires": [],
+    "manifests": [
+      "CMakeLists.txt",
+      "bindings/CMakeLists.txt",
+      "bindings/cpp/CMakeLists.txt",
+      "bindings/csharp/CMakeLists.txt",
+      "bindings/csharp/examples/CMakeLists.txt",
+      "bindings/csharp/examples/ExampleIIOEvent.csproj",
+      "bindings/csharp/examples/ExampleProgram.csproj",
+      "bindings/csharp/examples/PlutoExample.csproj",
+      "bindings/csharp/libiio-sharp-net.csproj",
+      "bindings/csharp/tests/CMakeLists.txt",
+      "bindings/python/pyproject.toml",
+      "deps/libini/CMakeLists.txt",
+      "deps/mdns/CMakeLists.txt",
+      "deps/wingetopt/CMakeLists.txt",
+      "doc/requirements_doc.txt",
+      "examples/CMakeLists.txt",
+      "examples/tinyiiod-linux/CMakeLists.txt",
+      "iiod-emu/CMakeLists.txt",
+      "iiod/CMakeLists.txt",
+      "man/CMakeLists.txt",
+      "tests/CMakeLists.txt",
+      "tests/api/CMakeLists.txt",
+      "tests/hardware/CMakeLists.txt",
+      "tests/utils/CMakeLists.txt",
+      "tinyiiod/CMakeLists.txt",
+      "utils/CMakeLists.txt",
+      "zephyr/CMakeLists.txt",
+      "zephyr/drivers/CMakeLists.txt",
+      "zephyr/drivers/adc/CMakeLists.txt",
+      "zephyr/drivers/iio_device/CMakeLists.txt",
+      "zephyr/iiod/CMakeLists.txt",
+      "zephyr/samples/iiod/CMakeLists.txt",
+      "zephyr/tests/iiod/CMakeLists.txt",
+      "zephyr/tests/iiod_concurrent/CMakeLists.txt",
+      "zephyr/tests/lock/CMakeLists.txt"
+    ],
+    "unique_by_ecosystem": {
+      "cmake-find_package": 6,
+      "pip": 8
+    },
+    "unique_count": 14
+  },
+  "excluded_dirs": [
+    ".git",
+    "build",
+    "managed_components",
+    "node_modules",
+    ".pio",
+    "dist",
+    "out",
+    "target",
+    ".venv",
+    "venv",
+    "__pycache__",
+    ".idea",
+    ".vscode"
+  ],
+  "git": {
+    "active_authors_last_90d": 1,
+    "age_days": 7,
+    "available": true,
+    "commits": 1,
+    "commits_by_month": {
+      "2026-10": 1
+    },
+    "commits_last_90d": 1,
+    "contributor_identities": 1,
+    "contributors": 1,
+    "days_since_last_commit": 7,
+    "first_commit": "2026-10-26T16:16:47+02:00",
+    "last_commit": "2026-10-26T16:16:47+02:00",
+    "tags": 0,
+    "top_contributors": [
+      "Ioana Chelaru"
+    ]
+  },
+  "github": {
+    "archived": false,
+    "available": true,
+    "created_at": "2014-02-17T13:51:34Z",
+    "default_branch": "main",
+    "forks": 373,
+    "full_name": "analogdevicesinc/libiio",
+    "open_issues_and_prs": 41,
+    "pushed_at": "2026-11-02T18:31:38Z",
+    "stars": 654,
+    "topics": [
+      "adc",
+      "analog",
+      "analog-devices",
+      "c",
+      "dac",
+      "digital",
+      "hacktoberfest",
+      "iio",
+      "iio-devices",
+      "industrial-linux",
+      "libiio",
+      "linux",
+      "linux-iio-drivers"
+    ],
+    "watchers": 55
+  },
+  "license": {
+    "evidence": "COPYING.txt",
+    "files": [
+      "COPYING.txt",
+      "COPYING_GPL.txt",
+      "COPYING_MIT.txt"
+    ],
+    "spdx": "LGPL-2.1"
+  },
+  "loc": {
+    "blank": 13560,
+    "by_language": [
+      {
+        "code": 32576,
+        "comment": 4656,
+        "files": 109,
+        "language": "C"
+      },
+      {
+        "code": 3569,
+        "comment": 362,
+        "files": 18,
+        "language": "Python"
+      },
+      {
+        "code": 3420,
+        "comment": 509,
+        "files": 34,
+        "language": "Markdown"
+      },
+      {
+        "code": 3209,
+        "comment": 397,
+        "files": 35,
+        "language": "CMake"
+      },
+      {
+        "code": 3103,
+        "comment": 2681,
+        "files": 34,
+        "language": "C Header"
+      },
+      {
+        "code": 2391,
+        "comment": 509,
+        "files": 21,
+        "language": "C#"
+      },
+      {
+        "code": 1927,
+        "comment": 137,
+        "files": 49,
+        "language": "YAML"
+      },
+      {
+        "code": 1605,
+        "comment": 272,
+        "files": 86,
+        "language": "reStructuredText"
+      },
+      {
+        "code": 890,
+        "comment": 181,
+        "files": 14,
+        "language": "Shell"
+      },
+      {
+        "code": 519,
+        "comment": 137,
+        "files": 1,
+        "language": "C++ Header"
+      },
+      {
+        "code": 329,
+        "comment": 27,
+        "files": 5,
+        "language": "PowerShell"
+      },
+      {
+        "code": 300,
+        "comment": 14,
+        "files": 7,
+        "language": "Kconfig"
+      },
+      {
+        "code": 58,
+        "comment": 13,
+        "files": 1,
+        "language": "C++"
+      },
+      {
+        "code": 57,
+        "comment": 7,
+        "files": 1,
+        "language": "CSS"
+      },
+      {
+        "code": 32,
+        "comment": 0,
+        "files": 1,
+        "language": "TOML"
+      },
+      {
+        "code": 20,
+        "comment": 7,
+        "files": 2,
+        "language": "Makefile"
+      }
+    ],
+    "code": 54005,
+    "code_programming": 46964,
+    "comment": 9909,
+    "files": 418,
+    "tool": "builtin (approximate)",
+    "vendored_dirs_counted": []
+  },
+  "name": "libiio",
+  "origin": "local:/workspace/scratch/b99a64b46c2a/sources/libiio",
+  "pcb": {
+    "available": false
+  },
+  "rsa_version": "0.1.3",
+  "schema": 1,
+  "slug": "libiio",
+  "tests_docs": {
+    "ci_workflows": [
+      ".github/workflows/_arm-builds.yml",
+      ".github/workflows/_linux-builds.yml",
+      ".github/workflows/_macos-builds.yml",
+      ".github/workflows/_mcu-builds.yml",
+      ".github/workflows/_windows-builds.yml",
+      ".github/workflows/build.yml",
+      ".github/workflows/codespell.yml",
+      ".github/workflows/copyright-license-check.yml",
+      ".github/workflows/doc.yml",
+      ".github/workflows/format.yml",
+      ".github/workflows/freebsd.yml",
+      ".github/workflows/python_bindings.yml",
+      ".github/workflows/scheduled-v0.yml",
+      ".github/workflows/tests.yml",
+      ".github/workflows/tinyiiod-linux.yml",
+      ".github/workflows/vale.yml",
+      ".github/workflows/zephyr-samples.yml",
+      ".github/workflows/zephyr-tests.yml"
+    ],
+    "doc_files": 159,
+    "doc_lines": 7883,
+    "readme": "README.md",
+    "readme_lines": 90,
+    "test_files": 33
+  },
+  "tools": {
+    "git": "git version 2.51.1",
+    "lizard": "1.25.0",
+    "python": "3.12.14",
+    "rea": null,
+    "rsa": "0.1.3",
+    "scc": null
+  },
+  "type": "repo"
+}
