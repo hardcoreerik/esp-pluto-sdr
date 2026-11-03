@@ -1,0 +1,8 @@
+name: Host protocol tests
+on: [push, pull_request]
+jobs:
+  protocol:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: sh tests/run.sh

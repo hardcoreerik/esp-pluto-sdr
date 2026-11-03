@@ -1,0 +1,11 @@
+if(COMMAND idf_component_register)
+    idf_component_register(SRCS "src/esp_pluto_sdr.c" "src/esp_pluto_tcp.c"
+                           INCLUDE_DIRS "include" REQUIRES lwip)
+else()
+    cmake_minimum_required(VERSION 3.16)
+    project(esp_pluto_sdr C)
+    add_library(esp_pluto_sdr src/esp_pluto_sdr.c src/esp_pluto_tcp.c)
+    target_include_directories(esp_pluto_sdr PUBLIC include)
+    target_compile_features(esp_pluto_sdr PUBLIC c_std_11)
+    target_compile_options(esp_pluto_sdr PRIVATE -Wall -Wextra -Werror)
+endif()
