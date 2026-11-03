@@ -43,3 +43,9 @@ for that example's REQUIRES declaration.
 No ESP-IDF cross-build, actual IIOD session or physical RF capture has run yet.
 Hardware compatibility and sustainable rates remain unverified. Project license
 selection is still pending; no component-registry release is made.
+
+## API documentation
+
+See the [complete API reference](docs/API.md) for parameter units, state rules,
+error recovery, memory ownership and a compilable usage example. Public headers
+also carry Doxygen comments for IDE navigation.
