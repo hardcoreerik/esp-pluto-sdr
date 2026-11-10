@@ -1,4 +1,4 @@
-version: "0.1.0"
+version: "0.2.0"
 description: "Host-side iiod client and IQ conversion for PlutoSDR-compatible IIO radios (ESP-IDF, ESP32-P4 first)"
 url: "https://github.com/hardcoreerik/esp-pluto-sdr"
 dependencies:
