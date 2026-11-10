@@ -29,3 +29,19 @@ Findings:
 - Control transfers on the P4 host must use `usb_host_transfer_submit_control()`.
 - On this chip (rev v3.2) the default v3 image only boots with `CONFIG_ESPTOOLPY_FLASHFREQ_40M`; at 80 MHz the ROM rejects the
   bootloader ("mismatch chip ID"). The "older than v3" image setting the other P4 boards use is refused by esptool here.
+
+## USB throughput ceiling on the ESP32-P4 (2026-11-10)
+
+`examples/usb_ladder` raises the AD9361 rate and pulls 16-bit IQ off the Pluto's libiio USB pipe with nothing else running (one 16 KiB transfer in
+flight at a time, no conversion). Waveshare ESP32-P4-WIFI6-POE-ETH (rev v3.2), Pluto fw v2.3, USB 2.0 high speed:
+
+| Asked | Delivered | Of nominal |
+|---|---|---|
+| 2.4 to 5.5 MS/s | equal to nominal (9.6 to 22.0 MB/s) | 100% |
+| 6.0 MS/s | 5.82 MS/s (23.3 MB/s) | 97% |
+| 6.5 / 7.0 / 8.0 MS/s | 5.82 to 5.84 MS/s (23.3 MB/s) | 89% / 83% / 73% |
+
+The delivered rate flattens at about 23.3 MB/s, the same ceiling seen from a PC, so the limit looks like the Pluto's USB gadget and not this
+host or this transport. Loss above the ceiling is silent on the wire (the reads just return fewer samples per second than nominal); compare the
+delivered rate with the nominal one to detect it. About 5.5 MS/s of 16-bit IQ is the highest clean rate measured; 7 MS/s is not reachable over
+this USB link. Not tried: two transfers in flight, larger transfers, another Pluto firmware.
