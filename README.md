@@ -15,3 +15,17 @@ Independent ESP-IDF host component for PlutoSDR-compatible IIO radios. ESP32-P4 
 The AD9361 cannot run below about 2.083 MS/s, so the wire carries at least 8.3 MB/s (4 bytes per complex sample over iiod).
 A wired host (ESP32-P4 board with Ethernet) can take that. An ESP32-P4 behind Wi-Fi through an ESP-Hosted C6 (Tab5) tops out
 near 2 MB/s, so it cannot receive the Pluto in real time; decimation would have to happen on the Pluto.
+
+## USB host path (verified 2026-11-09)
+
+`examples/usb_probe` runs on an ESP32-P4 USB host, finds the Pluto (vid 0456 pid b673, high speed), claims the libiio
+interface, opens pipe 0 with vendor control requests (RESET_PIPES=0, OPEN_PIPE=1; bmRequestType 0x41, wValue = pipe,
+wIndex = interface) and runs the same iiod client over the bulk endpoints. Result on a Waveshare ESP32-P4-WIFI6-POE-ETH
+(chip rev v3.2) with the Pluto (fw v2.3) on its USB port: **11.51 MB/s for 5 s at 2.88 MS/s (needs 11.52), no stall**.
+
+Findings:
+- v2.3 exposes two CDC-ACM serial pairs (interfaces 0-3) and the libiio interface as **interface 4, class 02/00/00, six bulk
+  endpoints = three pipes** (85/03, 86/04, 87/05). It is not class FF/EB, so match on the endpoint count.
+- Control transfers on the P4 host must use `usb_host_transfer_submit_control()`.
+- On this chip (rev v3.2) the default v3 image only boots with `CONFIG_ESPTOOLPY_FLASHFREQ_40M`; at 80 MHz the ROM rejects the
+  bootloader ("mismatch chip ID"). The "older than v3" image setting the other P4 boards use is refused by esptool here.
