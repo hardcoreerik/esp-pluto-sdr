@@ -175,6 +175,14 @@ int pluto_iiod_buffer_read(pluto_iiod_t *c, void *dst, size_t bytes) {
   char mask[16];
   if (read_line(c, mask, sizeof mask) < 0) return PLUTO_ERR_IO; /* iiod 0.26 sends the active-channel mask line first */
   if (n && c->io.recv(c->io.ctx, dst, (size_t)n) != (int)n) return PLUTO_ERR_IO;
+  /* The mask line says which channels the device actually put in the block. The converter assumes exactly the ones asked for,
+   * as interleaved 16-bit samples, so anything else is refused rather than converted into wrong IQ. */
+  char *end = NULL;
+  unsigned long got_mask = strtoul(mask, &end, 16);
+  if (end == mask || got_mask != (unsigned long)c->mask_chans) return PLUTO_ERR_PROTO;
+  unsigned chans = 0;
+  for (uint32_t m = c->mask_chans; m; m >>= 1) chans += m & 1u;
+  if (chans == 0 || ((size_t)n % (2u * chans)) != 0) return PLUTO_ERR_PROTO; /* not a whole number of samples */
   return (int)n;
 }
 
