@@ -11,10 +11,21 @@ static inline uint8_t to_u8(int32_t v) {
   return v < 0 ? 0 : (v > 255 ? 255 : (uint8_t)v);
 }
 
-size_t pluto_iq_convert(pluto_iq_conv_t *s, const int16_t *in, size_t n_in, uint8_t *out) {
+__attribute__((optimize("O3"))) size_t pluto_iq_convert(pluto_iq_conv_t *s, const int16_t *in, size_t n_in, uint8_t *out) {
   size_t o = 0;
   if (s->decim == 1) {
-    for (size_t i = 0; i < n_in; i++) {
+    /* Hot path (2.4 MS/s on the P4 reads a 64 KiB block from PSRAM every 6.8 ms): four complex samples per iteration. */
+    size_t i = 0;
+    const size_t n4 = n_in & ~(size_t)3;
+    for (; i < n4; i += 4) {
+      const int16_t *p = in + 2 * i;
+      const int32_t a0 = p[0], a1 = p[1], a2 = p[2], a3 = p[3], a4 = p[4], a5 = p[5], a6 = p[6], a7 = p[7];
+      uint8_t *q = out + 2 * i;
+      q[0] = to_u8(a0); q[1] = to_u8(a1); q[2] = to_u8(a2); q[3] = to_u8(a3);
+      q[4] = to_u8(a4); q[5] = to_u8(a5); q[6] = to_u8(a6); q[7] = to_u8(a7);
+    }
+    o = 2 * i;
+    for (; i < n_in; i++) {
       out[o++] = to_u8(in[2 * i]);
       out[o++] = to_u8(in[2 * i + 1]);
     }
