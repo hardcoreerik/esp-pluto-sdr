@@ -19,7 +19,8 @@ bool pluto_parse_range(const char *s, pluto_range_t *out) {
   return true;
 }
 
-int pluto_plan_rate(uint32_t wanted, uint32_t dev_min, uint32_t dev_max, uint32_t link_max, bool allow_decim, pluto_rate_plan_t *plan) {
+int pluto_plan_rate(uint32_t wanted, uint32_t dev_min, uint32_t dev_max, uint32_t link_max, bool allow_decim, uint32_t max_decim,
+                    pluto_rate_plan_t *plan) {
   if (!plan || wanted == 0 || dev_min == 0 || dev_max < dev_min) return -1;
   uint32_t ceiling = link_max && link_max < dev_max ? link_max : dev_max;
   if (ceiling < dev_min) return -1;
@@ -37,7 +38,7 @@ int pluto_plan_rate(uint32_t wanted, uint32_t dev_min, uint32_t dev_max, uint32_
   }
   if (!allow_decim) return -2;
   uint32_t d = pluto_iq_pick_decimation(wanted, dev_min, ceiling);
-  if (d == 0) return -2;
+  if (d == 0 || (max_decim && d > max_decim)) return -2;
   plan->out_sps = wanted;
   plan->ad_sps = wanted * d;
   plan->decim = d;

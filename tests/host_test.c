@@ -55,14 +55,19 @@ static void test_plan(void) {
   assert(!pluto_parse_range("[5 0 9]", &r)); /* zero step */
   pluto_rate_plan_t p;
   /* 960 kS/s is below the device minimum: converter at 2.88 MS/s, decimate by 3 */
-  assert(pluto_plan_rate(960000, 2083333, 61440000, 5500000, true, &p) == 0 && p.out_sps == 960000 && p.ad_sps == 2880000 && p.decim == 3 && !p.clamped);
-  assert(pluto_plan_rate(2400000, 2083333, 61440000, 5500000, true, &p) == 0 && p.out_sps == 2400000 && p.ad_sps == 2400000 && p.decim == 1);
+  assert(pluto_plan_rate(960000, 2083333, 61440000, 5500000, true, 20, &p) == 0 && p.out_sps == 960000 && p.ad_sps == 2880000 && p.decim == 3 && !p.clamped);
+  assert(pluto_plan_rate(2400000, 2083333, 61440000, 5500000, true, 20, &p) == 0 && p.out_sps == 2400000 && p.ad_sps == 2400000 && p.decim == 1);
   /* above the link ceiling: clamped to it, undecimated */
-  assert(pluto_plan_rate(8000000, 2083333, 61440000, 5500000, true, &p) == 0 && p.out_sps == 5500000 && p.decim == 1 && p.clamped);
+  assert(pluto_plan_rate(8000000, 2083333, 61440000, 5500000, true, 20, &p) == 0 && p.out_sps == 5500000 && p.decim == 1 && p.clamped);
   /* native 16-bit cannot be decimated up from below the minimum */
-  assert(pluto_plan_rate(960000, 2083333, 61440000, 5500000, false, &p) == -2);
-  assert(pluto_plan_rate(0, 2083333, 61440000, 5500000, true, &p) == -1);
-  assert(pluto_plan_rate(1000000, 2083333, 61440000, 1000000, true, &p) == -1); /* link ceiling below the device minimum */
+  assert(pluto_plan_rate(960000, 2083333, 61440000, 5500000, false, 20, &p) == -2);
+  /* very low output rates are refused: 1 kS/s would need decimation by 2084 */
+  assert(pluto_plan_rate(1000, 2083333, 61440000, 5500000, true, 20, &p) == -2);
+  assert(pluto_plan_rate(100000, 2083333, 61440000, 5500000, true, 20, &p) == -2); /* needs 21 */
+  assert(pluto_plan_rate(105000, 2083333, 61440000, 5500000, true, 20, &p) == 0 && p.decim == 20 && p.ad_sps == 2100000);
+  assert(pluto_plan_rate(100000, 2083333, 61440000, 5500000, true, 0, &p) == 0 && p.decim == 21); /* no cap */
+  assert(pluto_plan_rate(0, 2083333, 61440000, 5500000, true, 20, &p) == -1);
+  assert(pluto_plan_rate(1000000, 2083333, 61440000, 1000000, true, 20, &p) == -1); /* link ceiling below the device minimum */
   pluto_range_t bw = {200000, 1, 56000000, true};
   assert(pluto_auto_bandwidth(2400000, &bw) == 1920000);
   assert(pluto_auto_bandwidth(100000, &bw) == 200000); /* never below the device minimum */

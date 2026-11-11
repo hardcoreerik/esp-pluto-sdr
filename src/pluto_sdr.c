@@ -121,6 +121,7 @@ void pluto_sdr_config_default(pluto_sdr_config_t *c) {
   c->read_samples = 16384;
   c->buffers = 4;
   c->link_max_sps = 5500000;
+  c->max_decimation = 20;
   c->worker_core = 1;
   c->worker_priority = 7;
 }
@@ -220,6 +221,7 @@ static void fill_caps(struct pluto_sdr *h) {
   c.rate_min_sps = h->rate_range.ok ? (uint32_t)h->rate_range.lo : 2083334;
   c.rate_max_sps = h->rate_range.ok ? (uint32_t)(h->rate_range.hi > 0xFFFFFFFFLL ? 0xFFFFFFFFLL : h->rate_range.hi) : 61440000;
   c.rate_link_max_sps = h->cfg.link_max_sps;
+  c.out_rate_min_sps = (h->cfg.format == PLUTO_SDR_FORMAT_CU8 && h->cfg.max_decimation) ? (c.rate_min_sps + h->cfg.max_decimation - 1) / h->cfg.max_decimation : c.rate_min_sps;
   c.bw_min_hz = h->bw_range.ok ? (uint32_t)h->bw_range.lo : 200000;
   c.bw_max_hz = h->bw_range.ok ? (uint32_t)h->bw_range.hi : 56000000;
   if (h->gain_range.ok) {
@@ -255,7 +257,7 @@ static bool apply_rate(struct pluto_sdr *h, uint32_t wanted, uint32_t bw_req) {
   const bool allow_decim = h->cfg.format == PLUTO_SDR_FORMAT_CU8;
   const uint32_t dmin = h->rate_range.ok ? (uint32_t)h->rate_range.lo : 2083334;
   const uint32_t dmax = h->rate_range.ok ? (uint32_t)(h->rate_range.hi > 0xFFFFFFFFLL ? 0xFFFFFFFFLL : h->rate_range.hi) : 61440000;
-  if (pluto_plan_rate(wanted, dmin, dmax, h->cfg.link_max_sps, allow_decim, &p) != 0) return false;
+  if (pluto_plan_rate(wanted, dmin, dmax, h->cfg.link_max_sps, allow_decim, h->cfg.max_decimation, &p) != 0) return false;
   if (!wr_num(h, "voltage0", false, "sampling_frequency", p.ad_sps)) return false;
   (void)wr_num(h, "voltage0", false, "rf_bandwidth", bw_req ? bw_req : pluto_auto_bandwidth(p.out_sps, &h->bw_range));
   char v[32] = {0};
@@ -779,7 +781,7 @@ int pluto_sdr_quantize_sample_rate(pluto_sdr_handle_t h, uint32_t wanted, uint32
   xSemaphoreGive(h->lock);
   if (!valid) return PLUTO_SDR_ERR_NOT_CONNECTED;
   pluto_rate_plan_t p;
-  if (pluto_plan_rate(wanted, dmin, dmax, h->cfg.link_max_sps, h->cfg.format == PLUTO_SDR_FORMAT_CU8, &p) != 0) return PLUTO_SDR_ERR_BAD_RATE;
+  if (pluto_plan_rate(wanted, dmin, dmax, h->cfg.link_max_sps, h->cfg.format == PLUTO_SDR_FORMAT_CU8, h->cfg.max_decimation, &p) != 0) return PLUTO_SDR_ERR_BAD_RATE;
   *applied = p.out_sps;
   return PLUTO_SDR_OK;
 }

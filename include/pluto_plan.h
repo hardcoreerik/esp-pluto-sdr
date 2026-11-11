@@ -26,8 +26,11 @@ typedef struct {
 
 /* Plans a wanted output rate. `dev_min`/`dev_max` are the device's converter rate range, `link_max` the highest converter rate the host
  * link is allowed to carry (a measured number, not the device's), `allow_decim` false for streams that cannot be decimated (native 16-bit).
- * Returns 0 and fills `plan`, or a negative value: -1 invalid argument, -2 the rate is below the device minimum and cannot be decimated up. */
-int pluto_plan_rate(uint32_t wanted_sps, uint32_t dev_min, uint32_t dev_max, uint32_t link_max, bool allow_decim, pluto_rate_plan_t *plan);
+ * `max_decim` caps the integer decimation (0 = no cap): a boxcar average over many samples is a poor filter, so very low output rates are refused
+ * instead of being produced badly. Returns 0 and fills `plan`, or a negative value: -1 invalid argument, -2 the rate is below the device minimum
+ * and cannot be decimated up within the cap. */
+int pluto_plan_rate(uint32_t wanted_sps, uint32_t dev_min, uint32_t dev_max, uint32_t link_max, bool allow_decim, uint32_t max_decim,
+                    pluto_rate_plan_t *plan);
 
 /* Analog RF bandwidth for an output rate: 80% of it, kept inside the device's range when known (the AD9361 minimum is 200 kHz). */
 uint32_t pluto_auto_bandwidth(uint32_t out_sps, const pluto_range_t *bw_range);

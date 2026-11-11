@@ -60,6 +60,7 @@ typedef struct {
   pluto_sdr_format_t format;
   uint32_t read_samples;        /* complex samples per USB buffer read (default 16384) */
   uint8_t buffers;              /* raw blocks between the worker and read() (default 4) */
+  uint8_t max_decimation;       /* highest integer decimation for CU8 output (default 20, so about 104 kS/s is the lowest output rate); 0 = no cap */
   uint32_t link_max_sps;        /* highest converter rate the host link may be asked for; default 5,500,000 (measured on an ESP32-P4: clean to 5.5 MS/s) */
   uint8_t worker_core;          /* -1 for no affinity */
   uint8_t worker_priority;      /* default 7: the USB reader must not wait behind conversion or DSP */
@@ -75,6 +76,7 @@ typedef struct {
   uint64_t tune_min_hz, tune_max_hz;   /* RX LO span */
   uint32_t rate_min_sps, rate_max_sps; /* converter rate span the device allows */
   uint32_t rate_link_max_sps;          /* what the link is allowed to carry (config.link_max_sps) */
+  uint32_t out_rate_min_sps;           /* lowest output rate this driver will plan (device minimum divided by the decimation cap; CS16 cannot go below rate_min_sps) */
   uint32_t bw_min_hz, bw_max_hz;       /* analog RF bandwidth span */
   int gain_min_db10, gain_max_db10;    /* manual gain span, tenths of a dB */
   int32_t ppm_min_milli, ppm_max_milli; /* reference-oscillator correction span, thousandths of a ppm (about +-200 ppm) */
