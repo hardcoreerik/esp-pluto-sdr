@@ -19,6 +19,7 @@
 
 static const char *TAG = "pluto_sdr";
 
+enum { XO_NOMINAL_HZ = 40000000 };
 enum { RATE_SETTLE_US = 400000, GAIN_POLL_US = 1000000, WINDOW_US = 750000, SCAN_US = 1000000, RETRY_US = 1000000 };
 
 typedef struct {
@@ -42,7 +43,11 @@ struct pluto_sdr {
     bool bw_dirty;
     int gain_kind; /* 0 none, 1 auto, 2 manual */
     int gain_db10;
+    int32_t ppm_milli;
+    bool ppm_dirty;
+    bool trk_dirty, trk_rf, trk_bb, trk_quad;
   } req;
+  pluto_sdr_controls_t ctl;
   uint64_t cur_freq, tune_hz;
   int tune_err;
   uint32_t cur_rate;
@@ -57,7 +62,7 @@ struct pluto_sdr {
   pluto_iiod_t iiod;
   bool buffer_open;
   pluto_rate_plan_t plan;
-  pluto_range_t freq_range, rate_range, bw_range, gain_range;
+  pluto_range_t freq_range, rate_range, bw_range, gain_range, xo_range;
 
   /* hand-off to read(): conv, epoch and decim are guarded by conv_lock */
   SemaphoreHandle_t conv_lock;
@@ -154,6 +159,58 @@ static void refresh_gain(struct pluto_sdr *h) {
   xSemaphoreGive(h->lock);
 }
 
+static long long rd_ll(struct pluto_sdr *h, const char *dev_ch, bool out, const char *attr, bool *ok) {
+  char v[48] = {0};
+  const char *ch = (dev_ch && dev_ch[0]) ? dev_ch : NULL;
+  int r = pluto_iiod_read_attr(&h->iiod, h->iiod.phy, ch, out, attr, v, sizeof v);
+  if (ok) *ok = r > 0;
+  return r > 0 ? atoll(v) : 0;
+}
+
+static double rd_dbl(struct pluto_sdr *h, const char *ch, bool out, const char *attr, bool *ok) {
+  char v[48] = {0};
+  int r = pluto_iiod_read_attr(&h->iiod, h->iiod.phy, ch, out, attr, v, sizeof v);
+  if (ok) *ok = r > 0;
+  return r > 0 ? atof(v) : 0.0;
+}
+
+/* One attribute per call, in rotation: a burst of reads between two buffer reads could starve the USB pipe, so the readback cache is filled
+ * one slow step at a time. */
+static void refresh_step(struct pluto_sdr *h, int step) {
+  bool ok = false;
+  xSemaphoreTake(h->lock, portMAX_DELAY);
+  pluto_sdr_controls_t c = h->ctl;
+  xSemaphoreGive(h->lock);
+  switch (step % 8) {
+    case 0: { long long v = rd_ll(h, "altvoltage0", true, "frequency", &ok); if (ok) c.center_actual_hz = (uint64_t)v; break; }
+    case 1: { long long v = rd_ll(h, "voltage0", false, "rf_bandwidth", &ok); if (ok) c.bandwidth_hz = (uint32_t)v; break; }
+    case 2: { long long v = rd_ll(h, "voltage0", false, "sampling_frequency", &ok); if (ok) c.rate_converter_sps = (uint32_t)v; break; }
+    case 3: { double v = rd_dbl(h, "voltage0", false, "rssi", &ok); if (ok) c.rssi_db10 = (int)(v * 10.0 + (v < 0 ? -0.5 : 0.5)); break; }
+    case 4: {
+      long long v = rd_ll(h, NULL, false, "xo_correction", &ok);
+      if (ok) {
+        c.xo_hz = (uint32_t)v;
+        c.ppm_milli = (int32_t)((v - XO_NOMINAL_HZ) * 25);
+      }
+      break;
+    }
+    case 5: { long long v = rd_ll(h, "voltage0", false, "rf_dc_offset_tracking_en", &ok); if (ok) c.dc_tracking_rf = v != 0; break; }
+    case 6: { long long v = rd_ll(h, "voltage0", false, "bb_dc_offset_tracking_en", &ok); if (ok) c.dc_tracking_bb = v != 0; break; }
+    case 7: { long long v = rd_ll(h, "voltage0", false, "quadrature_tracking_en", &ok); if (ok) c.quadrature_tracking = v != 0; break; }
+  }
+  xSemaphoreTake(h->lock, portMAX_DELAY);
+  c.valid = true;
+  c.center_requested_hz = h->cur_freq;
+  c.center_error_hz = (int64_t)c.center_actual_hz - (int64_t)h->cur_freq;
+  c.rate_requested_sps = h->req.rate;
+  c.rate_out_sps = h->cur_rate;
+  c.decimation = h->decim;
+  c.gain_manual = h->gain.manual;
+  c.gain_db10 = h->gain.gain_db10;
+  h->ctl = c;
+  xSemaphoreGive(h->lock);
+}
+
 static void fill_caps(struct pluto_sdr *h) {
   pluto_sdr_caps_t c;
   memset(&c, 0, sizeof c);
@@ -168,6 +225,12 @@ static void fill_caps(struct pluto_sdr *h) {
   if (h->gain_range.ok) {
     c.gain_min_db10 = (int)(h->gain_range.lo * 10);
     c.gain_max_db10 = (int)(h->gain_range.hi * 10);
+  }
+  c.ppm_min_milli = -200000;
+  c.ppm_max_milli = 200000;
+  if (h->xo_range.ok) {
+    c.ppm_min_milli = (int32_t)((h->xo_range.lo - XO_NOMINAL_HZ) * 25);
+    c.ppm_max_milli = (int32_t)((h->xo_range.hi - XO_NOMINAL_HZ) * 25);
   }
   c.adc_bits = 12;
   c.rx_channels = 2;
@@ -228,6 +291,9 @@ static void apply_requests(struct pluto_sdr *h, int64_t now, uint32_t *pending_r
   bool fdirty, rdirty, bdirty;
   int gkind, gval;
   xSemaphoreTake(h->lock, portMAX_DELAY);
+  int32_t ppm = h->req.ppm_milli;
+  bool ppm_dirty = h->req.ppm_dirty, trk_dirty = h->req.trk_dirty, t_rf = h->req.trk_rf, t_bb = h->req.trk_bb, t_q = h->req.trk_quad;
+  h->req.ppm_dirty = h->req.trk_dirty = false;
   fdirty = h->req.freq_dirty;
   freq = h->req.freq;
   h->req.freq_dirty = false;
@@ -246,12 +312,29 @@ static void apply_requests(struct pluto_sdr *h, int64_t now, uint32_t *pending_r
     int err = PLUTO_SDR_OK;
     if (h->freq_range.ok && (freq < (uint64_t)h->freq_range.lo || freq > (uint64_t)h->freq_range.hi)) err = PLUTO_SDR_ERR_BAD_FREQ;
     else if (!wr_num(h, "altvoltage0", true, "frequency", (long long)freq)) err = PLUTO_SDR_ERR_BAD_FREQ;
+    long long actual = 0;
+    bool rb = false;
+    if (!err) actual = rd_ll(h, "altvoltage0", true, "frequency", &rb); /* what the synthesizer really settled on */
     xSemaphoreTake(h->lock, portMAX_DELAY);
     h->tune_hz = freq;
     h->tune_err = err;
-    if (!err) h->cur_freq = freq;
+    if (!err) {
+      h->cur_freq = freq;
+      if (rb) h->ctl.center_actual_hz = (uint64_t)actual;
+    }
     xSemaphoreGive(h->lock);
     ESP_LOGI(TAG, "TUNE %llu -> %s", (unsigned long long)freq, err ? pluto_sdr_err_to_name(err) : "ok");
+  }
+  if (ppm_dirty) {
+    long long xo = XO_NOMINAL_HZ + (long long)((double)ppm * 0.04 + (ppm < 0 ? -0.5 : 0.5));
+    if (h->xo_range.ok && (xo < h->xo_range.lo || xo > h->xo_range.hi)) ESP_LOGW(TAG, "frequency correction %d milli-ppm is outside the device span", (int)ppm);
+    else if (!wr_num(h, NULL, false, "xo_correction", xo)) ESP_LOGW(TAG, "xo_correction %lld refused", xo);
+    else ESP_LOGI(TAG, "XO correction %d milli-ppm (xo %lld Hz)", (int)ppm, xo);
+  }
+  if (trk_dirty) {
+    (void)wr_num(h, "voltage0", false, "rf_dc_offset_tracking_en", t_rf ? 1 : 0);
+    (void)wr_num(h, "voltage0", false, "bb_dc_offset_tracking_en", t_bb ? 1 : 0);
+    (void)wr_num(h, "voltage0", false, "quadrature_tracking_en", t_q ? 1 : 0);
   }
   if (gkind == 1) {
     (void)pluto_iiod_write_attr(&h->iiod, h->iiod.phy, "voltage0", false, "gain_control_mode", "slow_attack");
@@ -308,6 +391,11 @@ static void run_session(struct pluto_sdr *h) {
   rd_range(h, "voltage0", false, "sampling_frequency_available", &h->rate_range);
   rd_range(h, "voltage0", false, "rf_bandwidth_available", &h->bw_range);
   rd_range(h, "voltage0", false, "hardwaregain_available", &h->gain_range);
+  {
+    char xv[64] = {0};
+    if (pluto_iiod_read_attr(&h->iiod, h->iiod.phy, NULL, false, "xo_correction_available", xv, sizeof xv) > 0) pluto_parse_range(xv, &h->xo_range);
+    else h->xo_range.ok = false;
+  }
   ESP_LOGI(TAG, "ranges: tune %lld..%lld Hz, rate %lld..%lld S/s, gain %lld..%lld dB", h->freq_range.lo, h->freq_range.hi, h->rate_range.lo,
            h->rate_range.hi, h->gain_range.lo, h->gain_range.hi);
   xSemaphoreTake(h->lock, portMAX_DELAY);
@@ -329,7 +417,8 @@ static void run_session(struct pluto_sdr *h) {
   xSemaphoreGive(h->lock);
   bool ok = apply_rate(h, start_rate, start_bw);
   uint32_t applied_req_rate = start_rate, pending_rate = start_rate, applied_bw = start_bw;
-  int64_t rate_changed_at = 0, last_gain = esp_timer_get_time(), window_start = last_gain;
+  int64_t rate_changed_at = 0, last_gain = esp_timer_get_time(), window_start = last_gain, last_step = last_gain;
+  int step_no = 0;
   uint64_t win_in = 0, win_out_base = 0;
   if (ok) {
     xSemaphoreTake(h->lock, portMAX_DELAY);
@@ -350,6 +439,10 @@ static void run_session(struct pluto_sdr *h) {
     if (now - last_gain > GAIN_POLL_US) {
       last_gain = now;
       refresh_gain(h);
+    }
+    if (now - last_step > 120000) {
+      last_step = now;
+      refresh_step(h, step_no++);
     }
     uint32_t idx = 0;
     const bool have = xQueueReceive(h->freeq, &idx, 0) == pdTRUE;
@@ -641,6 +734,53 @@ int pluto_sdr_get_gain(pluto_sdr_handle_t h, pluto_sdr_gain_t *out) {
   xSemaphoreTake(h->lock, portMAX_DELAY);
   *out = h->gain;
   xSemaphoreGive(h->lock);
+  return PLUTO_SDR_OK;
+}
+
+int pluto_sdr_get_controls(pluto_sdr_handle_t h, pluto_sdr_controls_t *out) {
+  if (!h || !out) return PLUTO_SDR_ERR_INVALID_ARG;
+  xSemaphoreTake(h->lock, portMAX_DELAY);
+  *out = h->ctl;
+  out->center_requested_hz = h->cur_freq ? h->cur_freq : h->req.freq;
+  out->rate_requested_sps = h->req.rate;
+  xSemaphoreGive(h->lock);
+  return PLUTO_SDR_OK;
+}
+
+int pluto_sdr_set_freq_correction(pluto_sdr_handle_t h, int32_t ppm_milli) {
+  if (!h) return PLUTO_SDR_ERR_INVALID_ARG;
+  xSemaphoreTake(h->lock, portMAX_DELAY);
+  int err = PLUTO_SDR_OK;
+  if (h->caps.valid && (ppm_milli < h->caps.ppm_min_milli || ppm_milli > h->caps.ppm_max_milli)) err = PLUTO_SDR_ERR_INVALID_ARG;
+  else {
+    h->req.ppm_milli = ppm_milli;
+    h->req.ppm_dirty = true;
+  }
+  xSemaphoreGive(h->lock);
+  return err;
+}
+
+int pluto_sdr_set_tracking(pluto_sdr_handle_t h, bool dc_rf, bool dc_bb, bool quadrature) {
+  if (!h) return PLUTO_SDR_ERR_INVALID_ARG;
+  xSemaphoreTake(h->lock, portMAX_DELAY);
+  h->req.trk_rf = dc_rf;
+  h->req.trk_bb = dc_bb;
+  h->req.trk_quad = quadrature;
+  h->req.trk_dirty = true;
+  xSemaphoreGive(h->lock);
+  return PLUTO_SDR_OK;
+}
+
+int pluto_sdr_quantize_sample_rate(pluto_sdr_handle_t h, uint32_t wanted, uint32_t *applied) {
+  if (!h || !applied || wanted == 0) return PLUTO_SDR_ERR_INVALID_ARG;
+  xSemaphoreTake(h->lock, portMAX_DELAY);
+  const bool valid = h->caps.valid;
+  const uint32_t dmin = h->caps.rate_min_sps, dmax = h->caps.rate_max_sps;
+  xSemaphoreGive(h->lock);
+  if (!valid) return PLUTO_SDR_ERR_NOT_CONNECTED;
+  pluto_rate_plan_t p;
+  if (pluto_plan_rate(wanted, dmin, dmax, h->cfg.link_max_sps, h->cfg.format == PLUTO_SDR_FORMAT_CU8, &p) != 0) return PLUTO_SDR_ERR_BAD_RATE;
+  *applied = p.out_sps;
   return PLUTO_SDR_OK;
 }
 

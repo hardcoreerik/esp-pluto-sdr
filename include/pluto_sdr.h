@@ -77,6 +77,7 @@ typedef struct {
   uint32_t rate_link_max_sps;          /* what the link is allowed to carry (config.link_max_sps) */
   uint32_t bw_min_hz, bw_max_hz;       /* analog RF bandwidth span */
   int gain_min_db10, gain_max_db10;    /* manual gain span, tenths of a dB */
+  int32_t ppm_min_milli, ppm_max_milli; /* reference-oscillator correction span, thousandths of a ppm (about +-200 ppm) */
   uint8_t adc_bits;                    /* 12 */
   uint8_t rx_channels;                 /* 2 on the AD9361 (this driver streams RX1) */
   bool gain_auto;                      /* the device AGC can be selected */
@@ -96,6 +97,26 @@ typedef struct {
   int steps_db10[32];
   uint8_t step_count;
 } pluto_sdr_gain_t;
+
+/* Everything the driver last read back from the device, so a caller (or a test) can compare what it asked for with what the hardware is
+ * doing. Refreshed one attribute at a time while streaming, so values can be up to about a second old. */
+typedef struct {
+  bool valid;                          /* a session has refreshed it */
+  uint64_t center_requested_hz;        /* the last frequency asked for */
+  uint64_t center_actual_hz;           /* the RX LO as the device reports it */
+  int64_t center_error_hz;             /* actual - requested */
+  uint32_t rate_requested_sps;         /* the output rate asked for */
+  uint32_t rate_out_sps;               /* the output rate running (nominal) */
+  uint32_t rate_converter_sps;         /* the AD9361 sample rate as the device reports it (device rounding visible here) */
+  uint32_t decimation;
+  uint32_t bandwidth_hz;               /* analog RF bandwidth as the device reports it */
+  bool gain_manual;
+  int gain_db10;                       /* RX1 gain, tenths of a dB */
+  int rssi_db10;                       /* RX1 RSSI, tenths of a dB (the device's own relative figure) */
+  int32_t ppm_milli;                   /* reference correction in thousandths of a ppm (positive = the oscillator runs fast; rtl_sdr's sign) */
+  uint32_t xo_hz;                      /* reference frequency programmed into the device */
+  bool dc_tracking_rf, dc_tracking_bb, quadrature_tracking;
+} pluto_sdr_controls_t;
 
 typedef struct {
   uint64_t samples_received;   /* output-rate samples that came off the USB pipe */
@@ -145,6 +166,18 @@ int pluto_sdr_set_rf_bandwidth(pluto_sdr_handle_t h, uint32_t hz);          /* 0
 int pluto_sdr_set_gain_auto(pluto_sdr_handle_t h);
 int pluto_sdr_set_gain_manual(pluto_sdr_handle_t h, int gain_db10);
 int pluto_sdr_get_gain(pluto_sdr_handle_t h, pluto_sdr_gain_t *out);
+int pluto_sdr_get_controls(pluto_sdr_handle_t h, pluto_sdr_controls_t *out);
+
+/* Reference-oscillator correction for frequency accuracy, in thousandths of a ppm (the AD9361 takes the true reference frequency; its step is
+ * 1 Hz of 40 MHz = 0.025 ppm). Use it when a known signal shows the Pluto's tuning is off by a constant fraction. */
+int pluto_sdr_set_freq_correction(pluto_sdr_handle_t h, int32_t ppm_milli);
+
+/* The device's offset trackers: RF DC, baseband DC and quadrature. They are on in the device's default; turn one off to measure the raw error. */
+int pluto_sdr_set_tracking(pluto_sdr_handle_t h, bool dc_rf, bool dc_bb, bool quadrature);
+
+/* The output rate the driver would run for `wanted` (it plans decimation and the link ceiling): the parity of esp_rtl_sdr_quantize_sample_rate.
+ * Returns 0 and fills `applied`, or a negative error (BAD_RATE). Needs a session to have read the device's rate span once. */
+int pluto_sdr_quantize_sample_rate(pluto_sdr_handle_t h, uint32_t wanted, uint32_t *applied);
 
 /* Upper bound for `dst_cap` of read(): one USB block in the configured format at the lowest decimation. */
 size_t pluto_sdr_max_block_bytes(pluto_sdr_handle_t h);
