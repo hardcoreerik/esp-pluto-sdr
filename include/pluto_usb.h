@@ -7,6 +7,7 @@
  * a firmware that also supports dongles): pass install_host=false and this registers only an additional client.
  * Nothing here knows about any application. */
 #include <stdbool.h>
+#include <stddef.h>
 #include <stdint.h>
 
 #include "pluto_iiod.h"
@@ -35,6 +36,9 @@ int pluto_usb_open(pluto_io_t *io);
 
 /* Releases the interface and the device. Safe to call when nothing is open. */
 void pluto_usb_close(void);
+
+/* Strings and speed of the attached device (any may stay empty). */
+void pluto_usb_describe(char *manufacturer, size_t mcap, char *product, size_t pcap, char *serial, size_t scap, bool *high_speed);
 
 /* True once the device was unplugged or a transfer showed it gone (an open session must then be closed). */
 bool pluto_usb_gone(void);

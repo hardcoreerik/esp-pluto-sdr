@@ -15,6 +15,7 @@
 
 #include "pluto_iiod.h"
 #include "pluto_iq.h"
+#include "pluto_plan.h"
 
 static int s_send(void *ctx, const void *b, size_t n) { return send(*(int *)ctx, b, n, 0) == (ssize_t)n ? (int)n : -5; }
 static int s_recv(void *ctx, void *b, size_t n) {
@@ -44,6 +45,71 @@ static void test_iq(void) {
   assert(pluto_iq_pick_decimation(240000, 2083333, 61440000) == 9);
   assert(pluto_iq_pick_decimation(2048000, 2083333, 61440000) == 2);
   puts("iq: ok");
+}
+
+
+static void test_plan(void) {
+  pluto_range_t r;
+  assert(pluto_parse_range("[70000000 1 6000000000]", &r) && r.lo == 70000000 && r.hi == 6000000000LL && r.step == 1);
+  assert(!pluto_parse_range("garbage", &r) && !r.ok);
+  assert(!pluto_parse_range("[5 0 9]", &r)); /* zero step */
+  pluto_rate_plan_t p;
+  /* 960 kS/s is below the device minimum: converter at 2.88 MS/s, decimate by 3 */
+  assert(pluto_plan_rate(960000, 2083333, 61440000, 5500000, true, &p) == 0 && p.out_sps == 960000 && p.ad_sps == 2880000 && p.decim == 3 && !p.clamped);
+  assert(pluto_plan_rate(2400000, 2083333, 61440000, 5500000, true, &p) == 0 && p.out_sps == 2400000 && p.ad_sps == 2400000 && p.decim == 1);
+  /* above the link ceiling: clamped to it, undecimated */
+  assert(pluto_plan_rate(8000000, 2083333, 61440000, 5500000, true, &p) == 0 && p.out_sps == 5500000 && p.decim == 1 && p.clamped);
+  /* native 16-bit cannot be decimated up from below the minimum */
+  assert(pluto_plan_rate(960000, 2083333, 61440000, 5500000, false, &p) == -2);
+  assert(pluto_plan_rate(0, 2083333, 61440000, 5500000, true, &p) == -1);
+  assert(pluto_plan_rate(1000000, 2083333, 61440000, 1000000, true, &p) == -1); /* link ceiling below the device minimum */
+  pluto_range_t bw = {200000, 1, 56000000, true};
+  assert(pluto_auto_bandwidth(2400000, &bw) == 1920000);
+  assert(pluto_auto_bandwidth(100000, &bw) == 200000); /* never below the device minimum */
+  assert(pluto_auto_bandwidth(100000, NULL) == 200000);
+  pluto_range_t g = {-1, 1, 73, true};
+  int steps[32];
+  size_t n = pluto_build_gain_ladder(&g, steps, 32);
+  assert(n >= 2 && n <= 32 && steps[0] == 0 && steps[n - 1] <= 730 && steps[1] > steps[0]);
+  puts("plan: ok");
+}
+
+/* A scripted transport: the bytes a device would send, to check how the client reacts to a damaged or unexpected block. */
+typedef struct {
+  const char *data;
+  size_t len, pos;
+} script_t;
+static int sc_send(void *ctx, const void *b, size_t n) {
+  (void)ctx;
+  (void)b;
+  return (int)n;
+}
+static int sc_recv(void *ctx, void *b, size_t n) {
+  script_t *s = ctx;
+  if (s->pos + n > s->len) return -5;
+  memcpy(b, s->data + s->pos, n);
+  s->pos += n;
+  return (int)n;
+}
+static int readbuf(const char *reply, size_t len) {
+  script_t s = {reply, len, 0};
+  pluto_iiod_t c;
+  memset(&c, 0, sizeof c);
+  c.io.send = sc_send;
+  c.io.recv = sc_recv;
+  c.io.ctx = &s;
+  c.buffer_open = true;
+  c.mask_chans = 3;
+  strcpy(c.rx, "iio:device3");
+  uint8_t dst[64];
+  return pluto_iiod_buffer_read(&c, dst, sizeof dst);
+}
+static void test_readbuf(void) {
+  assert(readbuf("8\n00000003\n12345678", 19) == 8);  /* the requested mask, whole samples */
+  assert(readbuf("8\n00000001\n12345678", 19) < 0);   /* a different channel mask than asked for */
+  assert(readbuf("6\n00000003\n123456", 17) < 0);     /* not a whole number of samples */
+  assert(readbuf("8\n0000zz03\n12345678", 19) < 0);   /* unparseable mask */
+  puts("readbuf: ok");
 }
 
 static void live(const char *host) {
@@ -94,6 +160,8 @@ static void live(const char *host) {
 
 int main(int argc, char **argv) {
   test_iq();
+  test_plan();
+  test_readbuf();
   if (argc > 1) live(argv[1]);
   return 0;
 }

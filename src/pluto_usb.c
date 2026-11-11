@@ -171,6 +171,31 @@ int pluto_usb_init(bool install_host) {
   return 0;
 }
 
+static void str_desc_ascii(const usb_str_desc_t *d, char *out, size_t cap) {
+  if (!out || cap == 0) return;
+  out[0] = 0;
+  if (!d || d->bLength < 2) return;
+  size_t n = (size_t)(d->bLength - 2) / 2, o = 0;
+  for (size_t i = 0; i < n && o + 1 < cap; ++i) {
+    uint16_t c = d->wData[i];
+    out[o++] = c >= 32 && c < 127 ? (char)c : '?';
+  }
+  out[o] = 0;
+}
+
+void pluto_usb_describe(char *manufacturer, size_t mcap, char *product, size_t pcap, char *serial, size_t scap, bool *high_speed) {
+  if (manufacturer && mcap) manufacturer[0] = 0;
+  if (product && pcap) product[0] = 0;
+  if (serial && scap) serial[0] = 0;
+  if (high_speed) *high_speed = false;
+  usb_device_info_t info;
+  if (!g.dev || usb_host_device_info(g.dev, &info) != ESP_OK) return;
+  str_desc_ascii(info.str_desc_manufacturer, manufacturer, mcap);
+  str_desc_ascii(info.str_desc_product, product, pcap);
+  str_desc_ascii(info.str_desc_serial_num, serial, scap);
+  if (high_speed) *high_speed = info.speed == USB_SPEED_HIGH;
+}
+
 bool pluto_usb_present(void) { return g.dev != NULL && !atomic_load(&g.gone); }
 bool pluto_usb_gone(void) { return atomic_load(&g.gone) || atomic_load(&g.broken); }
 
