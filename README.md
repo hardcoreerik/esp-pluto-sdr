@@ -1,5 +1,5 @@
 # esp-pluto-sdr
-Independent ESP-IDF host component for PlutoSDR-compatible IIO radios. ESP32-P4 first, with radio control and IQ reception; OrcSDR is the first integration target.
+Independent ESP-IDF host component for PlutoSDR-compatible IIO radios. ESP32-P4 first, with radio control and IQ reception. It is a standalone driver with no dependency on any application; OrcSDR is one of the projects that uses it.
 
 ## Status (0.1.0, 2026-11-09)
 
