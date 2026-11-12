@@ -1,0 +1,7 @@
+# Name,   Type, SubType, Offset,  Size, Flags
+# Same layout as the OrcSDR Tab5 firmware (NVS and PHY at the ESP-IDF default offsets, 6 MB factory app, 256 KB coredump), so flashing this test
+# firmware does not move any partition and the stock image can be put back over it.
+nvs,      data, nvs,     ,        0x6000,
+phy_init, data, phy,     ,        0x1000,
+factory,  app,  factory, ,        6M,
+coredump, data, coredump, ,       256K,

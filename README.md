@@ -45,3 +45,21 @@ The delivered rate flattens at about 23.3 MB/s, the same ceiling seen from a PC,
 host or this transport. Loss above the ceiling is silent on the wire (the reads just return fewer samples per second than nominal); compare the
 delivered rate with the nominal one to detect it. About 5.5 MS/s of 16-bit IQ is the highest clean rate measured; 7 MS/s is not reachable over
 this USB link. Not tried: two transfers in flight, larger transfers, another Pluto firmware.
+
+## Tested on the M5Stack Tab5 (ESP32-P4 rev v1.3), 2026-11-11
+
+`examples/pluto_sdr_tab5` is a standalone test that uses only `pluto_sdr.h` (plus one board file that switches the Tab5's USB-A 5 V rail through its
+I/O expander). Results with a Pluto on the Tab5's USB-A port, USB 2.0 high speed:
+
+- 43 checks, 0 failures, in three runs, one of them straight after an abrupt reset of the Tab5 in the middle of streaming.
+- 8-bit output at 0.96 and 2.4 MS/s delivered at 100.00% of nominal, no dropped blocks, no USB errors.
+- Tuning at five bands, manual and automatic gain, RF bandwidth, reference correction (+-5 ppm) and the offset trackers all read back correctly on the
+  device, and out-of-range requests are refused.
+- Native 16-bit rate ladder (delivered / nominal): 2.4, 3, 4 and 5 MS/s 100%; 5.5 MS/s 97.9%; 6 MS/s 89.7%; 7 MS/s 77.1%. Delivery flattens at about
+  21.5 MB/s, so about 5 MS/s is the highest clean rate here (the ESP32-P4 board measured earlier flattened at 23.3 MB/s).
+
+Finding that changed the driver: the transport closed without sending libiio's `CLOSE_PIPE` request. After a clean session end the Pluto could keep the
+pipe open for a host that had gone, and the next session's first request went unanswered until iiod was restarted. The transport now sends
+`CLOSE_PIPE` before releasing the interface, as libiio does. With it, back-to-back sessions and a session after an abrupt host reset all connect.
+
+Board note (Tab5): a reset of the ESP32-P4 does not switch off the I/O-expander USB-A rail, so a Pluto stays powered across a reflash.

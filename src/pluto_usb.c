@@ -13,7 +13,7 @@
 static const char *TAG = "pluto_usb";
 
 /* libiio usb backend vendor requests (interface recipient, host to device): wValue = pipe index, wIndex = interface. */
-enum { CMD_RESET_PIPES = 0, CMD_OPEN_PIPE = 1 };
+enum { CMD_RESET_PIPES = 0, CMD_OPEN_PIPE = 1, CMD_CLOSE_PIPE = 2 };
 enum { XFER_BYTES = 16384, SEND_CHUNK = 4096, MAX_ZERO_LENGTH = 100, MAX_NO_PROGRESS = 3 };
 
 static struct {
@@ -290,7 +290,13 @@ int pluto_usb_open(pluto_io_t *io) {
 
 void pluto_usb_close(void) {
   if (g.dev) {
-    if (atomic_load(&g.claimed)) (void)usb_host_interface_release(g.client, g.dev, g.if_num);
+    if (atomic_load(&g.claimed)) {
+      /* Tell the device's libiio side that the pipe is finished, as libiio does when it closes a context. Without it the device keeps the pipe
+       * open for a host that has gone, and the next session's first request can go unanswered until iiod is restarted. Best effort: a device
+       * that is already gone or a transfer that is stuck simply skips it. */
+      if (!atomic_load(&g.gone) && !atomic_load(&g.broken) && g.xfer) (void)ctrl_out(CMD_CLOSE_PIPE, 0, g.if_num);
+      (void)usb_host_interface_release(g.client, g.dev, g.if_num);
+    }
     usb_host_device_close(g.client, g.dev);
   }
   atomic_store(&g.claimed, false);
