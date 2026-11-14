@@ -6,6 +6,7 @@
 
 #include "esp_log.h"
 #include "freertos/FreeRTOS.h"
+#include "freertos/queue.h"
 #include "freertos/semphr.h"
 #include "freertos/task.h"
 #include "usb/usb_host.h"
@@ -31,6 +32,76 @@ static struct {
 } g;
 
 static void xfer_cb(usb_transfer_t *t) { xSemaphoreGive((SemaphoreHandle_t)t->context); }
+
+/* Bulk IN reads are pipelined: IN_DEPTH transfers stay queued on the IN endpoint so the controller always has a buffer ready (the RTL-SDR
+ * driver does the same with 3 x 32 KiB). A single transfer resubmitted after every read leaves the endpoint with nothing queued between
+ * reads. Completions arrive in submit order, so the completion queue is also the data order. Only the transport's single user (the
+ * session worker) touches this state. */
+enum { IN_DEPTH = 3 };
+static usb_transfer_t *in_x[IN_DEPTH];
+static bool in_armed[IN_DEPTH]; /* the host owns this transfer */
+static QueueHandle_t in_q;      /* indices of completed IN transfers, in completion order */
+static int in_cur = -1;         /* transfer whose bytes are being consumed (not armed) */
+
+static void in_cb(usb_transfer_t *t) {
+  int i = (int)(intptr_t)t->context;
+  (void)xQueueSend(in_q, &i, 0);
+}
+
+static bool in_arm(int i) {
+  usb_transfer_t *t = in_x[i];
+  if (!t) return false;
+  t->device_handle = g.dev;
+  t->bEndpointAddress = g.ep_in;
+  t->num_bytes = XFER_BYTES;
+  t->callback = in_cb;
+  t->context = (void *)(intptr_t)i;
+  t->timeout_ms = 0;
+  if (usb_host_transfer_submit(t) != ESP_OK) return false;
+  in_armed[i] = true;
+  return true;
+}
+
+static int in_fill(void) {
+  for (int i = 0; i < IN_DEPTH; ++i)
+    if (!in_armed[i] && i != in_cur && in_x[i] && !in_arm(i)) return -5;
+  return 0;
+}
+
+/* Hands every queued IN transfer back to us: halt and flush the endpoint, then collect the CANCELED completions. A transfer the host never
+ * returns is abandoned (leaked on purpose) and the transport marked broken, as for a stuck control or OUT transfer. */
+static void in_cancel(void) {
+  int pending = 0;
+  for (int i = 0; i < IN_DEPTH; ++i)
+    if (in_armed[i]) ++pending;
+  in_cur = -1;
+  if (!pending || !g.dev) {
+    for (int i = 0; i < IN_DEPTH; ++i) in_armed[i] = false;
+    return;
+  }
+  (void)usb_host_endpoint_halt(g.dev, g.ep_in);
+  (void)usb_host_endpoint_flush(g.dev, g.ep_in);
+  while (pending > 0) {
+    int i;
+    if (xQueueReceive(in_q, &i, pdMS_TO_TICKS(1500)) != pdTRUE) break;
+    if (i >= 0 && i < IN_DEPTH && in_armed[i]) {
+      in_armed[i] = false;
+      --pending;
+    }
+  }
+  if (pending > 0) {
+    for (int i = 0; i < IN_DEPTH; ++i)
+      if (in_armed[i]) {
+        in_x[i] = NULL; /* the host still owns the buffer: never touch it again */
+        in_armed[i] = false;
+      }
+    atomic_store(&g.broken, true);
+    ESP_LOGE(TAG, "IN transfers never came back; transport marked broken");
+  } else {
+    (void)usb_host_endpoint_clear(g.dev, g.ep_in);
+  }
+  xQueueReset(in_q);
+}
 
 /* One transfer at a time, and the transfer object is never reused while the host may still own it. If the completion does not
  * arrive in time the endpoint is flushed so the host hands the transfer back (its callback then reports CANCELED); if even that
@@ -112,10 +183,23 @@ static int u_recv(void *ctx, void *b, size_t n) {
   uint8_t *p = b;
   size_t got = 0;
   while (got < n) {
-    if (g.rx_pos == g.rx_len) {
-      int r = run_transfer(g.ep_in, XFER_BYTES, 5000);
-      if (r < 0) return r;
-      if (r == 0) {
+    if (in_cur < 0 || g.rx_pos == g.rx_len) {
+      in_cur = -1; /* consumed: in_fill() below puts it back on the endpoint */
+      if (atomic_load(&g.gone) || atomic_load(&g.broken) || !g.dev) return -19;
+      if (in_fill() < 0) return -5;
+      int i = -1;
+      if (xQueueReceive(in_q, &i, pdMS_TO_TICKS(5500)) != pdTRUE) {
+        ESP_LOGW(TAG, "no IN completion in time; cancelling");
+        in_cancel();
+        return -110;
+      }
+      if (i < 0 || i >= IN_DEPTH || !in_x[i]) return -5;
+      in_armed[i] = false;
+      usb_transfer_t *t = in_x[i];
+      if (t->status == USB_TRANSFER_STATUS_NO_DEVICE) atomic_store(&g.gone, true);
+      if (t->status != USB_TRANSFER_STATUS_COMPLETED) return -(int)(100 + t->status);
+      const int r = t->actual_num_bytes;
+      if (r <= 0) {
         if (++g.zero_len_run >= MAX_ZERO_LENGTH) {
           g.zero_len_run = 0;
           return -110;
@@ -123,12 +207,13 @@ static int u_recv(void *ctx, void *b, size_t n) {
         continue;
       }
       g.zero_len_run = 0;
+      in_cur = i;
       g.rx_len = (size_t)r;
       g.rx_pos = 0;
     }
     size_t k = g.rx_len - g.rx_pos;
     if (k > n - got) k = n - got;
-    memcpy(p + got, g.xfer->data_buffer + g.rx_pos, k);
+    memcpy(p + got, in_x[in_cur]->data_buffer + g.rx_pos, k);
     g.rx_pos += k;
     got += k;
   }
@@ -153,9 +238,21 @@ static void client_task(void *a) {
   for (;;) usb_host_client_handle_events(g.client, portMAX_DELAY);
 }
 
+/* Releases everything pluto_usb_init() allocates for transfers. Only for a failed init: nothing has been submitted yet. */
+static void pipeline_free_unused(void) {
+  for (int i = 0; i < IN_DEPTH; ++i) {
+    if (in_x[i]) usb_host_transfer_free(in_x[i]);
+    in_x[i] = NULL;
+  }
+  if (g.xfer) usb_host_transfer_free(g.xfer);
+  g.xfer = NULL;
+  if (in_q) vQueueDelete(in_q);
+  in_q = NULL;
+}
+
 int pluto_usb_init(bool install_host) {
   if (g.inited) return 0;
-  g.done = xSemaphoreCreateBinary();
+  if (!g.done) g.done = xSemaphoreCreateBinary();
   if (!g.done) return -12;
   if (install_host) {
     usb_host_config_t hc = {.intr_flags = ESP_INTR_FLAG_LEVEL1};
@@ -163,10 +260,21 @@ int pluto_usb_init(bool install_host) {
     if (e != ESP_OK) return -5;
     xTaskCreate(lib_task, "pluto_lib", 4096, NULL, 10, NULL);
   }
+  /* Every transfer buffer and the completion queue are allocated before the client is registered and its task started, so a failure here
+   * unwinds completely and leaves no task running. */
+  in_q = xQueueCreate(IN_DEPTH, sizeof(int));
+  bool ok = in_q != NULL && usb_host_transfer_alloc(XFER_BYTES + 64, 0, &g.xfer) == ESP_OK;
+  for (int i = 0; ok && i < IN_DEPTH; ++i) ok = usb_host_transfer_alloc(XFER_BYTES, 0, &in_x[i]) == ESP_OK;
+  if (!ok) {
+    pipeline_free_unused();
+    return -12;
+  }
   usb_host_client_config_t cc = {.is_synchronous = false, .max_num_event_msg = 5, .async = {.client_event_callback = client_cb}};
-  if (usb_host_client_register(&cc, &g.client) != ESP_OK) return -5;
+  if (usb_host_client_register(&cc, &g.client) != ESP_OK) {
+    pipeline_free_unused();
+    return -5;
+  }
   xTaskCreate(client_task, "pluto_cl", 4096, NULL, 9, NULL);
-  if (usb_host_transfer_alloc(XFER_BYTES + 64, 0, &g.xfer) != ESP_OK) return -12;
   g.inited = true;
   return 0;
 }
@@ -202,7 +310,10 @@ bool pluto_usb_gone(void) { return atomic_load(&g.gone) || atomic_load(&g.broken
 bool pluto_usb_poll(void) {
   if (!g.inited) return false;
   if (g.dev && !pluto_usb_gone()) return true;
-  if (g.dev) pluto_usb_close(); /* unplugged or broken: forget it so a replug is found */
+  if (g.dev) {
+    pluto_usb_close(); /* unplugged or broken: forget it so a replug is found */
+    if (g.dev) return false; /* the close did not finish: keep retrying, never scan with a handle still held */
+  }
   uint8_t list[16];
   int n = 0;
   if (usb_host_device_addr_list_fill(sizeof list, list, &n) != ESP_OK) return false;
@@ -261,7 +372,13 @@ static bool find_iio_interface(const usb_config_desc_t *cfg) {
 
 int pluto_usb_open(pluto_io_t *io) {
   if (!g.dev || pluto_usb_gone() || !io) return -19;
+  if (atomic_load(&g.claimed)) return -16; /* already open: leave the live transfers and queue alone (EBUSY) */
   if (!g.xfer && usb_host_transfer_alloc(XFER_BYTES + 64, 0, &g.xfer) != ESP_OK) return -12; /* the old one was abandoned */
+  for (int i = 0; i < IN_DEPTH; ++i)
+    if (!in_x[i] && usb_host_transfer_alloc(XFER_BYTES, 0, &in_x[i]) != ESP_OK) return -12; /* an abandoned one is replaced */
+  for (int i = 0; i < IN_DEPTH; ++i) in_armed[i] = false;
+  in_cur = -1;
+  xQueueReset(in_q);
   const usb_config_desc_t *cfg = NULL;
   if (usb_host_get_active_config_descriptor(g.dev, &cfg) != ESP_OK || !find_iio_interface(cfg)) {
     ESP_LOGE(TAG, "no libiio interface in the configuration");
@@ -291,13 +408,23 @@ int pluto_usb_open(pluto_io_t *io) {
 void pluto_usb_close(void) {
   if (g.dev) {
     if (atomic_load(&g.claimed)) {
+      in_cancel(); /* queued reads go back to us before the interface is released */
       /* Tell the device's libiio side that the pipe is finished, as libiio does when it closes a context. Without it the device keeps the pipe
        * open for a host that has gone, and the next session's first request can go unanswered until iiod is restarted. Best effort: a device
        * that is already gone or a transfer that is stuck simply skips it. */
       if (!atomic_load(&g.gone) && !atomic_load(&g.broken) && g.xfer) (void)ctrl_out(CMD_CLOSE_PIPE, 0, g.if_num);
-      (void)usb_host_interface_release(g.client, g.dev, g.if_num);
+      if (usb_host_interface_release(g.client, g.dev, g.if_num) == ESP_OK) atomic_store(&g.claimed, false);
     }
-    usb_host_device_close(g.client, g.dev);
+    /* The device handle and the ownership state are kept until both the interface release and the device close have succeeded. With a transfer
+     * the host never returned, the release fails (the host refuses it while transfers are outstanding) and so would the close; forgetting the
+     * handle then would leave the device open in the host stack and a later open of the same address impossible. The transport stays marked
+     * broken, pluto_usb_poll() calls this again on every scan, and it succeeds once the host has handed the transfers back (at the latest when
+     * the device is unplugged). */
+    if (atomic_load(&g.claimed) || usb_host_device_close(g.client, g.dev) != ESP_OK) {
+      atomic_store(&g.broken, true);
+      ESP_LOGE(TAG, "close incomplete; keeping the device handle and retrying");
+      return;
+    }
   }
   atomic_store(&g.claimed, false);
   g.dev = NULL;
